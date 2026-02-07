@@ -266,7 +266,7 @@ body {
     height: auto;
     transform: translateX(-50%);
     object-fit: cover;
-    object-position: center 40%;
+    object-position: center 50%;
     z-index: 0;
 }
 
