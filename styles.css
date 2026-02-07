@@ -10,26 +10,26 @@
     --color-bg-section: #111111;
     --color-bg-card: #1a1a1a;
     --color-bg-card-hover: #222222;
-    
+
     --color-gold: #c9a962;
     --color-gold-light: #e0c882;
     --color-gold-dark: #a88b4a;
-    
+
     --color-text-primary: #ffffff;
     --color-text-secondary: #b3b3b3;
     --color-text-muted: #666666;
-    
+
     --color-border: #2a2a2a;
     --color-border-gold: rgba(201, 169, 98, 0.3);
-    
+
     /* Typography */
     --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    
+
     /* Spacing */
     --section-padding: 120px;
     --container-max: 1200px;
-    
+
     /* Transitions */
     --transition-fast: 0.2s ease;
     --transition-medium: 0.3s ease;
@@ -37,7 +37,9 @@
 }
 
 /* Reset & Base */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -252,23 +254,29 @@ body {
     overflow: hidden;
 }
 
-.hero-bg {
+.hero-video {
     position: absolute;
-    inset: 0;
-    background: 
-        radial-gradient(ellipse at 20% 80%, rgba(201, 169, 98, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(201, 169, 98, 0.05) 0%, transparent 50%),
-        linear-gradient(180deg, var(--color-bg-dark) 0%, var(--color-bg-section) 100%);
+    top: 50%;
+    left: 50%;
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+    transform: translate(-50%, -50%);
+    object-fit: cover;
+    z-index: 0;
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.02)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 1;
 }
 
 .hero-content {
     position: relative;
+    z-index: 2;
     text-align: center;
     max-width: 900px;
     padding: 0 24px;
@@ -312,6 +320,7 @@ body {
 
 .hero-scroll {
     position: absolute;
+    z-index: 2;
     bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
@@ -347,8 +356,17 @@ body {
 }
 
 @keyframes scroll-bounce {
-    0%, 100% { top: 8px; opacity: 1; }
-    50% { top: 20px; opacity: 0.5; }
+
+    0%,
+    100% {
+        top: 8px;
+        opacity: 1;
+    }
+
+    50% {
+        top: 20px;
+        opacity: 0.5;
+    }
 }
 
 /* Stats Section */
@@ -959,20 +977,20 @@ body {
     :root {
         --section-padding: 80px;
     }
-    
+
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 24px;
     }
-    
+
     .investments-grid {
         grid-template-columns: repeat(2, 1fr);
     }
-    
+
     .why-us-grid {
         gap: 48px;
     }
-    
+
     .contact-grid {
         gap: 48px;
     }
@@ -982,7 +1000,7 @@ body {
     :root {
         --section-padding: 60px;
     }
-    
+
     .nav-menu {
         position: fixed;
         top: 0;
@@ -996,107 +1014,107 @@ body {
         transition: right var(--transition-medium);
         border-left: 1px solid var(--color-border);
     }
-    
+
     .nav-menu.active {
         right: 0;
     }
-    
+
     .nav-toggle {
         display: flex;
         z-index: 1001;
     }
-    
+
     .nav-toggle.active span:nth-child(1) {
         transform: rotate(45deg) translate(5px, 5px);
     }
-    
+
     .nav-toggle.active span:nth-child(2) {
         opacity: 0;
     }
-    
+
     .nav-toggle.active span:nth-child(3) {
         transform: rotate(-45deg) translate(5px, -5px);
     }
-    
+
     .hero-title {
         font-size: clamp(2rem, 10vw, 3.5rem);
     }
-    
+
     .stats-grid {
         grid-template-columns: 1fr;
         gap: 20px;
     }
-    
+
     .stat-card {
         padding: 32px 24px;
     }
-    
+
     .why-us-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .why-us-image {
         order: -1;
     }
-    
+
     .investments-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .process-timeline::before {
         left: 24px;
     }
-    
+
     .process-step {
         gap: 24px;
     }
-    
+
     .step-number {
         width: 48px;
         height: 48px;
         font-size: 1rem;
     }
-    
+
     .team-founders {
         grid-template-columns: 1fr;
     }
-    
+
     .founder-card {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .team-photo {
         margin: 0 auto;
     }
-    
+
     .team-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .network-card {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .network-card .team-photo {
         margin: 0 auto;
     }
-    
+
     .contact-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .contact-form-wrapper {
         padding: 32px;
     }
-    
+
     .footer-content {
         flex-direction: column;
         gap: 24px;
         text-align: center;
     }
-    
+
     .footer-links {
         flex-wrap: wrap;
         justify-content: center;
@@ -1108,20 +1126,20 @@ body {
     .container {
         padding: 0 16px;
     }
-    
+
     .hero-cta {
         flex-direction: column;
         padding: 0 20px;
     }
-    
+
     .btn {
         width: 100%;
     }
-    
+
     .contact-links {
         flex-direction: column;
     }
-    
+
     .contact-link {
         justify-content: center;
     }
