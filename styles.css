@@ -176,6 +176,16 @@ body {
     color: var(--color-text-primary);
 }
 
+.logo-img {
+    height: 45px;
+    width: auto;
+    display: block;
+}
+
+.footer-logo {
+    height: 60px;
+}
+
 .nav-menu {
     display: flex;
     align-items: center;
