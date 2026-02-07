@@ -141,6 +141,8 @@ body {
     right: 0;
     z-index: 1000;
     padding: 20px 0;
+    background: rgba(10, 10, 10, 0.25);
+    backdrop-filter: blur(10px);
     transition: all var(--transition-medium);
 }
 
@@ -256,14 +258,15 @@ body {
 
 .hero-video {
     position: absolute;
-    top: 50%;
+    top: 0;
     left: 50%;
     min-width: 100%;
     min-height: 100%;
     width: auto;
     height: auto;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     object-fit: cover;
+    object-position: center top;
     z-index: 0;
 }
 
@@ -279,7 +282,11 @@ body {
     z-index: 2;
     text-align: center;
     max-width: 900px;
-    padding: 0 24px;
+    padding: 48px 48px;
+    background: rgba(10, 10, 10, 0.3);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .hero-badge {
