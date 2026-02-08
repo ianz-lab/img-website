@@ -1427,7 +1427,7 @@ body {
 
 /* Gold foil texture for text */
 .gold-foil-text {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 300px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1443,12 +1443,12 @@ body {
 
 /* Gold foil border effect */
 .gold-foil-border {
-    border-image: url('Site Media/gold_foil_texture.png') 30 round;
+    border-image: url('Site Media/goldfoil.jpg') 30 round;
 }
 
 /* Gold foil button */
 .btn-primary {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 200px;
     color: #000;
     font-weight: 600;
@@ -1457,7 +1457,7 @@ body {
 }
 
 .btn-primary:hover {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 200px;
     filter: brightness(1.15);
     transform: translateY(-2px);
@@ -1466,7 +1466,7 @@ body {
 
 /* Gold foil for stat numbers */
 .stat-number {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 300px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1476,7 +1476,7 @@ body {
 }
 
 .stat-suffix {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 300px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1486,7 +1486,7 @@ body {
 
 /* Gold foil for section title highlights */
 .gold-text {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 300px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1498,7 +1498,7 @@ body {
 /* Gold foil for founders card title and signature */
 .founders-text h3,
 .founders-signature {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 300px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1508,7 +1508,7 @@ body {
 
 /* Gold foil for team roles */
 .team-role {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 200px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1521,12 +1521,12 @@ body {
     border: 2px solid transparent;
     background:
         linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box,
-        url('Site Media/gold_foil_texture.png') border-box;
+        url('Site Media/goldfoil.jpg') border-box;
     background-size: auto, 150px;
 }
 
 .step-number {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 150px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1539,13 +1539,13 @@ body {
     border: 1px solid transparent;
     background:
         rgba(201, 169, 98, 0.1) padding-box,
-        url('Site Media/gold_foil_texture.png') border-box;
+        url('Site Media/goldfoil.jpg') border-box;
     background-size: auto, 200px;
 }
 
 /* Gold foil for nav CTA button */
 .nav-cta {
-    background: url('Site Media/gold_foil_texture.png') !important;
+    background: url('Site Media/goldfoil.jpg') !important;
     background-size: 150px !important;
     color: #000 !important;
     font-weight: 600;
@@ -1553,19 +1553,19 @@ body {
 
 .nav-cta:hover {
     filter: brightness(1.1);
-    background: url('Site Media/gold_foil_texture.png') !important;
+    background: url('Site Media/goldfoil.jpg') !important;
     background-size: 150px !important;
 }
 
 /* Gold foil for image frame */
 .image-frame {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 200px;
 }
 
 /* Gold foil for lang toggle active option */
 .lang-option.active {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 100px;
     -webkit-background-clip: text;
     background-clip: text;
@@ -1590,7 +1590,7 @@ body {
 
 /* Gold foil for expand button text */
 .expand-btn {
-    background: url('Site Media/gold_foil_texture.png');
+    background: url('Site Media/goldfoil.jpg');
     background-size: 150px;
     -webkit-background-clip: text;
     background-clip: text;
