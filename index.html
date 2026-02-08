@@ -36,11 +36,18 @@
                 <span></span>
             </button>
             <ul class="nav-menu" id="navMenu">
-                <li><a href="#why-us" class="nav-link">Why Us</a></li>
-                <li><a href="#investments" class="nav-link">Investments</a></li>
-                <li><a href="#process" class="nav-link">Process</a></li>
-                <li><a href="#team" class="nav-link">Our Team</a></li>
-                <li><a href="#contact" class="nav-link nav-cta">Get Started</a></li>
+                <li><a href="#why-us" class="nav-link" data-i18n="nav.whyUs">Why Us</a></li>
+                <li><a href="#investments" class="nav-link" data-i18n="nav.investments">Investments</a></li>
+                <li><a href="#process" class="nav-link" data-i18n="nav.process">Process</a></li>
+                <li><a href="#team" class="nav-link" data-i18n="nav.team">Our Team</a></li>
+                <li><a href="#contact" class="nav-link nav-cta" data-i18n="nav.getStarted">Get Started</a></li>
+                <li class="lang-toggle-wrapper">
+                    <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
+                        <span class="lang-option active" data-lang="en">EN</span>
+                        <span class="lang-divider">|</span>
+                        <span class="lang-option" data-lang="tr">TR</span>
+                    </button>
+                </li>
             </ul>
         </div>
     </nav>
@@ -52,22 +59,22 @@
         </video>
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <div class="hero-badge">California Real Estate Investment</div>
+            <div class="hero-badge" data-i18n="hero.badge">California Real Estate Investment</div>
             <h1 class="hero-title">
-                Your Bridge to<br>
-                <span class="gold-text">U.S. Real Estate</span>
+                <span data-i18n="hero.titleLine1">Your Bridge to</span><br>
+                <span class="gold-text" data-i18n="hero.titleLine2">U.S. Real Estate</span>
             </h1>
-            <p class="hero-subtitle">
-                We don't just open doors — we guide international buyers through every step of U.S. real estate
+            <p class="hero-subtitle" data-i18n="hero.subtitle">
+                We don't just open doors, we guide international buyers through every step of U.S. real estate
                 ownership.
             </p>
             <div class="hero-cta">
-                <a href="#contact" class="btn btn-primary">Start Your Journey</a>
-                <a href="#why-invest" class="btn btn-secondary">Learn More</a>
+                <a href="#contact" class="btn btn-primary" data-i18n="hero.cta1">Start Your Journey</a>
+                <a href="#why-invest" class="btn btn-secondary" data-i18n="hero.cta2">Learn More</a>
             </div>
         </div>
         <div class="hero-scroll">
-            <span>Scroll to explore</span>
+            <span data-i18n="hero.scroll">Scroll to explore</span>
             <div class="scroll-indicator"></div>
         </div>
     </section>
@@ -76,25 +83,28 @@
     <section class="stats" id="why-invest">
         <div class="container">
             <div class="stats-header">
-                <h2 class="section-title">Why Invest in <span class="gold-text">U.S. Real Estate?</span></h2>
-                <p class="section-subtitle">The United States remains one of the most secure and profitable real estate
-                    markets in the world — offering stability, transparency, and long-term growth.</p>
+                <h2 class="section-title"><span data-i18n="stats.titlePre">Why Invest in </span><span class="gold-text"
+                        data-i18n="stats.titleHighlight">U.S. Real Estate?</span></h2>
+                <p class="section-subtitle" data-i18n="stats.subtitle">The United States remains one of the most secure
+                    and profitable real estate
+                    markets in the world, offering stability, transparency, and long-term growth that few countries can
+                    match.</p>
             </div>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" data-target="50">$0</div>
-                    <div class="stat-suffix">Trillion</div>
-                    <div class="stat-label">Overall U.S. Real Estate Market Value</div>
+                    <div class="stat-suffix" data-i18n="stats.trillion">Trillion</div>
+                    <div class="stat-label" data-i18n="stats.marketValue">Overall U.S. Real Estate Market Value</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" data-target="50">$0</div>
-                    <div class="stat-suffix">Billion</div>
-                    <div class="stat-label">International Purchases Each Year</div>
+                    <div class="stat-suffix" data-i18n="stats.billion">Billion</div>
+                    <div class="stat-label" data-i18n="stats.intlPurchases">International Purchases Each Year</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" data-target="36">0</div>
                     <div class="stat-suffix">%</div>
-                    <div class="stat-label">of U.S. Households Rent Their Homes</div>
+                    <div class="stat-label" data-i18n="stats.renters">of U.S. Households Rent Their Homes</div>
                 </div>
             </div>
         </div>
@@ -105,44 +115,151 @@
         <div class="container">
             <div class="why-us-grid">
                 <div class="why-us-content">
-                    <h2 class="section-title">Why Choose <span class="gold-text">IM Global?</span></h2>
-                    <p class="section-text">
-                        Because we do more than transact — we build relationships. Every client is treated as a partner.
-                        We listen first: your goals, concerns, vision — then tailor the path.
+                    <h2 class="section-title"><span data-i18n="whyUs.titlePre">Why Choose </span><span
+                            class="gold-text">IM Global?</span></h2>
+                    <p class="section-text" data-i18n="whyUs.intro1">
+                        Because we do more than transact; we build relationships. Every client is treated as a partner.
+                        We listen first; your goals, concerns, vision, then tailor the path.
                     </p>
-                    <p class="section-text">
+                    <p class="section-text" data-i18n="whyUs.intro2">
                         With deep roots in Southern California and access to 500+ offices nationwide, we navigate
                         cultural, legal, and financial bridges so you don't have to.
                     </p>
                     <div class="features-list">
                         <div class="feature-item">
-                            <div class="feature-icon">🌍</div>
-                            <div class="feature-content">
-                                <h4>Global Reach + Local Expertise</h4>
-                                <p>Backed by Realty ONE Group's 500+ offices worldwide, but locally rooted in Southern
-                                    California.</p>
+                            <div class="feature-icon">
+                                <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <path
+                                        d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+                                </svg>
                             </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">📊</div>
                             <div class="feature-content">
-                                <h4>Proven Track Record</h4>
-                                <p>Realty ONE Group closed $33.7B in sales across 87,000+ transactions.</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🔍</div>
-                            <div class="feature-content">
-                                <h4>Transparent Guidance</h4>
-                                <p>We simplify complex legal, tax, and ownership structures for cross-border buyers.</p>
-                            </div>
-                        </div>
-                        <div class="feature-item">
-                            <div class="feature-icon">🤝</div>
-                            <div class="feature-content">
-                                <h4>Full Service Support</h4>
-                                <p>Your investment journey doesn't end at closing. We provide ongoing portfolio support.
+                                <h4 data-i18n="whyUs.feature1Title">Global Reach + Local Expertise</h4>
+                                <p data-i18n="whyUs.feature1Text">Backed by Realty ONE Group's 500+ offices worldwide,
+                                    but locally rooted in Southern California. We connect global investors to U.S. real
+                                    estate opportunities with insight into both cultural and financial considerations.
                                 </p>
+                                <div class="feature-expand">
+                                    <button class="expand-btn" data-target="feature1-details">
+                                        <span data-i18n="common.readMore">Read More</span>
+                                        <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="expand-content" id="feature1-details">
+                                        <p data-i18n="whyUs.feature1Expanded">We are more than agents, we're your
+                                            partners through every stage of U.S. real estate ownership. Our investor
+                                            services are designed to provide international buyers with a seamless U.S.
+                                            real estate experience. We don't just manage transactions; we guide people.
+                                            Every client's story is unique, and we take the time to understand your
+                                            goals, concerns, and vision before mapping out the right path forward.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M18 20V10M12 20V4M6 20v-6" />
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h4 data-i18n="whyUs.feature2Title">Proven Track Record</h4>
+                                <p data-i18n="whyUs.feature2Text">Realty ONE Group closed $33.7B in sales across 87,000+
+                                    transactions, we deliver results you can trust.</p>
+                                <div class="feature-expand">
+                                    <button class="expand-btn" data-target="feature2-details">
+                                        <span data-i18n="common.readMore">Read More</span>
+                                        <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="expand-content" id="feature2-details">
+                                        <p data-i18n="whyUs.feature2Expanded">We have grown into one of the fastest
+                                            expanding real estate brands in the world, closing tens of thousands of
+                                            transactions annually and surpassing $30+ billion in yearly sales volume.
+                                            With 500+ offices worldwide and over 19,000 professionals, our network
+                                            consistently delivers results at scale.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <circle cx="11" cy="11" r="8" />
+                                    <path d="M21 21l-4.35-4.35" />
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h4 data-i18n="whyUs.feature3Title">Transparent Guidance</h4>
+                                <p data-i18n="whyUs.feature3Text">We simplify complex legal, tax, and ownership
+                                    structures for cross-border buyers, ensuring clarity at every step.</p>
+                                <div class="feature-expand">
+                                    <button class="expand-btn" data-target="feature3-details">
+                                        <span data-i18n="common.readMore">Read More</span>
+                                        <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="expand-content" id="feature3-details">
+                                        <p data-i18n="whyUs.feature3Expanded">When one of our overseas clients came to
+                                            us, they were excited about investing in the U.S. but overwhelmed by the
+                                            process. We walked them through the options step by step, made sure nothing
+                                            was lost in translation, and kept every detail coordinated. The result? A
+                                            smooth transaction, a smart investment, and the confidence to expand their
+                                            portfolio further. We specialize in representing you through the entire
+                                            process; identifying opportunities, negotiating contracts, and managing all
+                                            moving parts with the same care we would for our own families.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" />
+                                    <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                    <path d="M9 9h.01M15 9h.01" />
+                                    <path d="M7.5 11.5c1-2 2.5-3 4.5-3s3.5 1 4.5 3" />
+                                </svg>
+                            </div>
+                            <div class="feature-content">
+                                <h4 data-i18n="whyUs.feature4Title">Full Service Support</h4>
+                                <p data-i18n="whyUs.feature4Text">Your investment journey doesn't end at closing. We
+                                    provide ongoing portfolio support.</p>
+                                <div class="feature-expand">
+                                    <button class="expand-btn" data-target="feature4-details">
+                                        <span data-i18n="common.readMore">Read More</span>
+                                        <svg class="expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2">
+                                            <polyline points="6 9 12 15 18 9"></polyline>
+                                        </svg>
+                                    </button>
+                                    <div class="expand-content" id="feature4-details">
+                                        <p data-i18n="whyUs.feature4Expanded1">Beyond the transaction, we connect you
+                                            with trusted professionals we've built relationships with over years of
+                                            experience. This way, your investment is not only well structured and
+                                            legally compliant, but also built for long term success and peace of mind.
+                                        </p>
+                                        <ul class="feature-list">
+                                            <li data-i18n="whyUs.feature4Item1">1. Market analysis and strategy for
+                                                investors</li>
+                                            <li data-i18n="whyUs.feature4Item2">2. Introductions to vetted attorneys,
+                                                CPAs, and property managers</li>
+                                            <li data-i18n="whyUs.feature4Item3">3. Long-term portfolio planning and
+                                                support</li>
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -151,11 +268,19 @@
                     <div class="image-frame">
                         <div class="founders-card">
                             <div class="founders-text">
-                                <h3>Who We Are</h3>
-                                <p>We are a Southern California based real estate group with U.S.-wide and international
-                                    brokerage reach, dedicated to connecting investors from around the world with
-                                    opportunities across the American market.</p>
-                                <p class="founders-signature">— Melda & Ian</p>
+                                <h3 data-i18n="whyUs.whoWeAre">Who We Are</h3>
+                                <p data-i18n="whyUs.whoWeAreText1">We are a Southern California based real estate group
+                                    with U.S.-wide and international brokerage reach, dedicated to connecting investors
+                                    from around the world with opportunities across the American market.</p>
+                                <p data-i18n="whyUs.whoWeAreText2">We started this company to help international
+                                    investors overcome the unique hurdles of buying property in the U.S. from abroad;
+                                    from navigating legal and financial systems to bridging cultural and language gaps.
+                                </p>
+                                <p data-i18n="whyUs.whoWeAreText3">By combining local expertise with global perspective,
+                                    we ensure every client can navigate cultural, legal, and financial differences with
+                                    confidence. At the core of our mission is transforming investments into long term
+                                    growth, and transactions into lasting relationships.</p>
+                                <p class="founders-signature">Melda & Ian</p>
                             </div>
                         </div>
                     </div>
@@ -168,32 +293,65 @@
     <section class="investments" id="investments">
         <div class="container">
             <div class="investments-header">
-                <h2 class="section-title">Types of <span class="gold-text">Investments</span></h2>
-                <p class="section-subtitle">We help investors identify the right type of property to match their unique
-                    objectives.</p>
+                <h2 class="section-title"><span data-i18n="investments.titlePre">Types of </span><span class="gold-text"
+                        data-i18n="investments.titleHighlight">Investments</span></h2>
+                <p class="section-subtitle" data-i18n="investments.intro">We help investors identify the right type of
+                    property to match their unique objectives. Whether you're looking for rental income through
+                    residential or multi family properties, long term appreciation in prime commercial markets, or a
+                    U.S. base for your business, we tailor your investment search to your priorities. Our expertise
+                    ensures you enter the right market segment with confidence and clarity.</p>
             </div>
             <div class="investments-grid">
                 <div class="investment-card">
-                    <div class="investment-icon">🏠</div>
-                    <h3>Residential</h3>
-                    <p>Single-family homes, condos, and multi-family properties for rental income or appreciation.</p>
+                    <div class="investment-icon">
+                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 21h18" />
+                            <path d="M5 21V7l7-4 7 4v14" />
+                            <path d="M9 21v-6h6v6" />
+                            <path d="M9 9h.01M15 9h.01M9 12h.01M15 12h.01" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="investments.residentialTitle">Residential</h3>
+                    <p data-i18n="investments.residentialText">Single family homes, condos, and multi family properties
+                        for rental income or appreciation.</p>
                 </div>
                 <div class="investment-card">
-                    <div class="investment-icon">🏢</div>
-                    <h3>Commercial</h3>
-                    <p>Office, retail, and mixed-use spaces in prime markets with long-term growth potential.</p>
+                    <div class="investment-icon">
+                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 21h18" />
+                            <path d="M5 21V9l4-4h6l4 4v12" />
+                            <path d="M9 21v-4h6v4" />
+                            <path d="M9 9h.01M15 9h.01M9 13h.01M15 13h.01" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="investments.commercialTitle">Commercial</h3>
+                    <p data-i18n="investments.commercialText">Office, retail, and mixed use spaces in prime markets with
+                        long term growth potential.</p>
                 </div>
                 <div class="investment-card">
-                    <div class="investment-icon">🏭</div>
-                    <h3>Industrial</h3>
-                    <p>Warehouses, logistics centers, and specialized facilities suited for today's supply chain
-                        demands.</p>
+                    <div class="investment-icon">
+                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M3 21h18" />
+                            <path d="M4 21V10a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v11" />
+                            <path d="M9 9V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v4" />
+                            <path d="M8 13h.01M12 13h.01M16 13h.01M8 17h.01M12 17h.01M16 17h.01" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="investments.industrialTitle">Industrial</h3>
+                    <p data-i18n="investments.industrialText">Warehouses, logistics centers, and specialized facilities
+                        suited for today's supply chain demands.</p>
                 </div>
                 <div class="investment-card">
-                    <div class="investment-icon">💼</div>
-                    <h3>Business Opportunities</h3>
-                    <p>U.S.-based franchises, hospitality, and small businesses for investors seeking an operational
-                        foothold.</p>
+                    <div class="investment-icon">
+                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="2" y="7" width="20" height="14" rx="2" />
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                            <path d="M6 12h.01M18 12h.01" />
+                        </svg>
+                    </div>
+                    <h3 data-i18n="investments.businessTitle">Business Opportunities</h3>
+                    <p data-i18n="investments.businessText">U.S. based franchises, hospitality, and small businesses for
+                        investors seeking an operational foothold.</p>
                 </div>
             </div>
         </div>
@@ -203,50 +361,68 @@
     <section class="process" id="process">
         <div class="container">
             <div class="process-header">
-                <h2 class="section-title">How We <span class="gold-text">Simplify the Process</span></h2>
-                <p class="section-subtitle">Investing across borders can feel complex — but we simplify it.</p>
+                <h2 class="section-title"><span data-i18n="process.titlePre">How We </span><span class="gold-text"
+                        data-i18n="process.titleHighlight">Simplify the Process</span></h2>
+                <p class="section-subtitle" data-i18n="process.intro">Investing across borders can feel complex, but we
+                    simplify it. From the first consultation, we provide a clear step by step process that eliminates
+                    confusion. Our streamlined client interface ensures you have real time access to every update,
+                    document, and communication, no matter where you are in the world. We outline what you need to know,
+                    when you need to know it, and connect you with specialists for anything requiring deeper expertise.
+                </p>
             </div>
             <div class="process-timeline">
                 <div class="process-step">
                     <div class="step-number">01</div>
                     <div class="step-content">
-                        <h3>Personalized Consultation</h3>
-                        <p>Your journey starts with a conversation. We take the time to understand your vision — whether
-                            it's finding a new residence, acquiring a commercial property, or building a high-yield
-                            investment portfolio.</p>
+                        <h3 data-i18n="process.step1Title">Personalized Consultation</h3>
+                        <p data-i18n="process.step1Text">Your journey starts with a conversation. We take the time to
+                            understand your vision, whether it's finding a new residence, acquiring a commercial
+                            property, or building a high-yield investment portfolio.</p>
                     </div>
                 </div>
                 <div class="process-step">
                     <div class="step-number">02</div>
                     <div class="step-content">
-                        <h3>Market Analysis & Strategy</h3>
-                        <p>Our team uses advanced market analytics to identify the most promising investment properties.
-                            We consider market trends, appreciation potential, and rental yield to craft a strategy that
-                            matches your objectives.</p>
+                        <h3 data-i18n="process.step2Title">Market Analysis & Strategy</h3>
+                        <p data-i18n="process.step2Text">We go beyond simple listings. Our team uses advanced market
+                            analytics to identify and source the most promising investment properties. We consider
+                            factors like market trends, potential for appreciation, and rental yield to craft a strategy
+                            that matches your objectives.</p>
                     </div>
                 </div>
                 <div class="process-step">
                     <div class="step-number">03</div>
                     <div class="step-content">
-                        <h3>Comprehensive Property Search</h3>
-                        <p>With access to exclusive listings and the nationwide Realty ONE Group network, we find the
-                            ideal property for you — residential, commercial, industrial, or business opportunities.</p>
+                        <h3 data-i18n="process.step3Title">Comprehensive Property Search</h3>
+                        <p data-i18n="process.step3Text">With access to exclusive listings and the nationwide Realty ONE
+                            Group network, we find the ideal property for you. Our search spans all categories:</p>
+                        <ul class="step-list">
+                            <li data-i18n="process.step3Item1"><strong>Residential:</strong> Find the perfect home to
+                                live in.</li>
+                            <li data-i18n="process.step3Item2"><strong>Commercial / Industrial:</strong> Secure the
+                                ideal space for your business.</li>
+                            <li data-i18n="process.step3Item3"><strong>Business Opportunities:</strong> Identify
+                                existing businesses with profitable real estate holdings.</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="process-step">
                     <div class="step-number">04</div>
                     <div class="step-content">
-                        <h3>Expert Navigation & Due Diligence</h3>
-                        <p>We provide end-to-end support, from navigating legal frameworks and foreign investment laws
-                            to coordinating virtual property tours and managing cross-border communications.</p>
+                        <h3 data-i18n="process.step4Title">Expert Navigation & Due Diligence</h3>
+                        <p data-i18n="process.step4Text">The U.S. real estate market has unique legal and financial
+                            requirements for foreign investors. We provide end-to-end support, from navigating legal
+                            frameworks and foreign investment laws to coordinating virtual property tours and managing
+                            cross-border communications.</p>
                     </div>
                 </div>
                 <div class="process-step">
                     <div class="step-number">05</div>
                     <div class="step-content">
-                        <h3>Seamless Closing</h3>
-                        <p>We handle the details to ensure a smooth and efficient transaction, no matter where you are
-                            in the world. Our goal is transparency at every step.</p>
+                        <h3 data-i18n="process.step5Title">Seamless Closing</h3>
+                        <p data-i18n="process.step5Text">We handle the details to ensure a smooth and efficient
+                            transaction, no matter where you are in the world. Our goal is to make the process as
+                            transparent and straightforward as possible, so you can focus on your investment.</p>
                     </div>
                 </div>
             </div>
@@ -257,9 +433,14 @@
     <section class="team" id="team">
         <div class="container">
             <div class="team-header">
-                <h2 class="section-title">Our <span class="gold-text">Trusted Network</span></h2>
-                <p class="section-subtitle">Success in U.S. real estate requires more than finding the right property —
-                    it requires the right team.</p>
+                <h2 class="section-title"><span data-i18n="team.titlePre">Our </span><span class="gold-text"
+                        data-i18n="team.titleHighlight">Trusted Network</span></h2>
+                <p class="section-subtitle" data-i18n="team.intro">Success in U.S. real estate requires more than
+                    finding the right property, it requires the right team. That's why we've built a trusted network of
+                    professionals who specialize in supporting international investors. From attorneys to CPAs and
+                    property managers, we connect you to the experts who ensure your investment is legally sound,
+                    financially efficient, and managed effectively. Together, we help you build confidence and security
+                    in your U.S. portfolio.</p>
             </div>
 
             <!-- Founders -->
@@ -270,10 +451,14 @@
                     </div>
                     <div class="team-info">
                         <h3>Melda Mariona</h3>
-                        <span class="team-role">Real Estate Agent | Co-Founder</span>
-                        <p>Originally from Turkey, Melda brings an international perspective to the U.S. real estate
-                            market. With a background in engineering and project management, she approaches each
-                            investment with precision and problem-solving expertise.</p>
+                        <span class="team-role" data-i18n="team.meldaRole">Real Estate Agent | Co-Founder IM Global
+                            Co.</span>
+                        <p data-i18n="team.meldaBio">Originally from Turkey, Melda Mariona brings an international
+                            perspective to the U.S. real estate market. With a background in engineering and project
+                            management, she approaches each investment with precision, structure, and problem solving
+                            expertise. Today, she focuses on helping buyers, sellers, and investors navigate the U.S.
+                            market with clarity and confidence, combining technical insight with a client first approach
+                            to unlock opportunities across residential, commercial, and investment property types.</p>
                         <div class="team-license">DRE# 02239848</div>
                     </div>
                 </div>
@@ -283,17 +468,20 @@
                     </div>
                     <div class="team-info">
                         <h3>Ian Zeljak</h3>
-                        <span class="team-role">Real Estate Agent | Co-Founder</span>
-                        <p>Before launching his career as a trusted real estate advisor, Ian spent years as an
-                            electrician in residential, commercial, and industrial environments. That hands-on
-                            experience gives him an insider's perspective few agents can offer.</p>
+                        <span class="team-role" data-i18n="team.ianRole">Real Estate Agent | Co-Founder IM Global
+                            Co.</span>
+                        <p data-i18n="team.ianBio">Before launching his career as a trusted real estate advisor, Ian
+                            Zeljak spent years as an electrician working in residential, commercial, and industrial
+                            environments. That hands on experience gives him an insider's perspective few agents can
+                            offer. Today, Ian combines that practical knowledge with deep market expertise to help
+                            investors confidently pursue opportunities across every property type.</p>
                         <div class="team-license">DRE# 02051683</div>
                     </div>
                 </div>
             </div>
 
             <!-- Network -->
-            <h3 class="network-title">Our Professional Network</h3>
+            <h3 class="network-title" data-i18n="team.networkTitle">Our Professional Network</h3>
             <div class="team-grid">
                 <div class="team-card network-card">
                     <div class="team-photo small">
@@ -301,9 +489,13 @@
                     </div>
                     <div class="team-info">
                         <h3>Saime Atakan, Esq</h3>
-                        <span class="team-role">Attorney</span>
-                        <p>Licensed in California, New York, and Istanbul. Specializes in cross-border transactions,
-                            mergers, acquisitions, immigration, and real estate law.</p>
+                        <span class="team-role" data-i18n="team.saimeRole">Attorney</span>
+                        <p data-i18n="team.saimeBio">Saime Atakan is an attorney licensed in California, New York and
+                            Istanbul. She owns her own law firm in Beverly Hills, California. She successfully handles
+                            cross border transactions, mergers and acquisitions. She also practices immigration law and
+                            real estate law. She helps investors navigate complex legal and financial structures with
+                            clarity, ensuring their assets are protected and their investments positioned for success.
+                        </p>
                     </div>
                 </div>
                 <div class="team-card network-card">
@@ -312,9 +504,11 @@
                     </div>
                     <div class="team-info">
                         <h3>Burcu Tansu</h3>
-                        <span class="team-role">Attorney</span>
-                        <p>Los Angeles-based attorney specializing in immigration law with strong connections to the
-                            Turkish-American community.</p>
+                        <span class="team-role" data-i18n="team.burcuRole">Attorney</span>
+                        <p data-i18n="team.burcuBio">Burcu Tansu is a Los Angeles based attorney specializing in
+                            immigration law, with strong connections to the Turkish American community. She helps
+                            clients navigate U.S. immigration systems, visa processes, and legal challenges with
+                            clarity, compassion, and expertise.</p>
                     </div>
                 </div>
                 <div class="team-card network-card">
@@ -323,9 +517,13 @@
                     </div>
                     <div class="team-info">
                         <h3>Ari Demiral, PhD</h3>
-                        <span class="team-role">Accountant</span>
-                        <p>35+ years of experience in tax planning, accounting, and business advisory services with
-                            expertise in both U.S. and international financial practices.</p>
+                        <span class="team-role" data-i18n="team.ariRole">Accountant</span>
+                        <p data-i18n="team.ariBio">Ari Demiral is a Los Angeles based accountant with over 35 years of
+                            experience in tax planning, accounting, and business advisory services, as well as
+                            experience as a professor and university lecturer. With roots in Turkey and a deep
+                            understanding of both U.S. and international financial practices, he helps investors,
+                            business owners, and individuals structure deals, minimize tax exposure, and build long term
+                            financial success.</p>
                     </div>
                 </div>
                 <div class="team-card network-card">
@@ -334,9 +532,13 @@
                     </div>
                     <div class="team-info">
                         <h3>Ayşe Fügen Arda</h3>
-                        <span class="team-role">Türkiye Real Estate Consultant</span>
-                        <p>Licensed Real Estate Professional in Kadıköy, Istanbul, Türkiye with expertise in
-                            international marketing and negotiation.</p>
+                        <span class="team-role" data-i18n="team.ayseRole">Türkiye Real Estate Investment
+                            Consultant</span>
+                        <p data-i18n="team.ayseBio">Experienced Licensed Real Estate Professional in Kadıköy, Istanbul,
+                            Türkiye with a demonstrated history of working in the real estate industry. Skilled in
+                            Marketing Management, Negotiation, Market Planning, Business Planning, and International
+                            Marketing. Strong real estate professional with a Bachelor's degree focused in English
+                            Language and Literature/Letters from Hacettepe Üniversitesi.</p>
                     </div>
                 </div>
             </div>
@@ -348,21 +550,35 @@
         <div class="container">
             <div class="contact-grid">
                 <div class="contact-info">
-                    <h2 class="section-title">Get in <span class="gold-text">Touch</span></h2>
-                    <p class="section-text">Ready to explore U.S. real estate opportunities? Your American future starts
-                        here. Contact us today to begin your personalized journey.</p>
+                    <h2 class="section-title"><span data-i18n="contact.titlePre">Get in </span><span class="gold-text"
+                            data-i18n="contact.titleHighlight">Touch</span></h2>
+                    <p class="contact-cta-text" data-i18n="contact.ctaText">Ready to explore the opportunities? Your
+                        American Future Starts Here. Contact us today to begin your personalized real estate journey.
+                    </p>
 
                     <div class="contact-cards">
                         <div class="contact-person">
                             <h4>Melda Mariona</h4>
                             <div class="contact-links">
                                 <a href="tel:+13102925956" class="contact-link">
-                                    <span class="contact-icon">📞</span>
+                                    <span class="contact-icon">
+                                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="1.5">
+                                            <path
+                                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                        </svg>
+                                    </span>
                                     <span>+1 (310) 292-5956</span>
                                 </a>
                                 <a href="https://api.whatsapp.com/send?phone=13102925956" class="contact-link"
                                     target="_blank">
-                                    <span class="contact-icon">💬</span>
+                                    <span class="contact-icon">
+                                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="1.5">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                                        </svg>
+                                    </span>
                                     <span>WhatsApp</span>
                                 </a>
                             </div>
@@ -371,12 +587,24 @@
                             <h4>Ian Zeljak</h4>
                             <div class="contact-links">
                                 <a href="tel:+14242549186" class="contact-link">
-                                    <span class="contact-icon">📞</span>
+                                    <span class="contact-icon">
+                                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="1.5">
+                                            <path
+                                                d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+                                        </svg>
+                                    </span>
                                     <span>+1 (424) 254-9186</span>
                                 </a>
                                 <a href="https://api.whatsapp.com/send?phone=17246990101" class="contact-link"
                                     target="_blank">
-                                    <span class="contact-icon">💬</span>
+                                    <span class="contact-icon">
+                                        <svg class="gold-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="1.5">
+                                            <path
+                                                d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+                                        </svg>
+                                    </span>
                                     <span>WhatsApp</span>
                                 </a>
                             </div>
@@ -384,7 +612,7 @@
                     </div>
 
                     <div class="office-locations">
-                        <h4>Office Locations</h4>
+                        <h4 data-i18n="contact.officeLocations">Office Locations</h4>
                         <ul>
                             <li>13274 Fiji Way Suite 100, Marina Del Rey, CA 90292</li>
                             <li>608 Silver Spur Rd Unit 101, Rolling Hills Estates, CA 90274</li>
@@ -397,31 +625,40 @@
 
                 <div class="contact-form-wrapper">
                     <form class="contact-form" id="contactForm">
-                        <h3>Send Us a Message</h3>
+                        <h3 data-i18n="contact.formTitle">Send Us a Message</h3>
                         <div class="form-group">
-                            <input type="text" id="name" name="name" placeholder="Your Name" required>
+                            <input type="text" id="name" name="name" placeholder="Your Name"
+                                data-i18n-placeholder="contact.namePlaceholder" required>
                         </div>
                         <div class="form-group">
-                            <input type="email" id="email" name="email" placeholder="Your Email" required>
+                            <input type="email" id="email" name="email" placeholder="Your Email"
+                                data-i18n-placeholder="contact.emailPlaceholder" required>
                         </div>
                         <div class="form-group">
-                            <input type="tel" id="phone" name="phone" placeholder="Your Phone (with country code)">
+                            <input type="tel" id="phone" name="phone" placeholder="Your Phone (with country code)"
+                                data-i18n-placeholder="contact.phonePlaceholder">
                         </div>
                         <div class="form-group">
                             <select id="interest" name="interest">
-                                <option value="">What are you interested in?</option>
-                                <option value="residential">Residential Investment</option>
-                                <option value="commercial">Commercial Investment</option>
-                                <option value="industrial">Industrial Investment</option>
-                                <option value="business">Business Opportunities</option>
-                                <option value="other">Other</option>
+                                <option value="" data-i18n="contact.interestDefault">What are you interested in?
+                                </option>
+                                <option value="residential" data-i18n="contact.interestResidential">Residential
+                                    Investment</option>
+                                <option value="commercial" data-i18n="contact.interestCommercial">Commercial Investment
+                                </option>
+                                <option value="industrial" data-i18n="contact.interestIndustrial">Industrial Investment
+                                </option>
+                                <option value="business" data-i18n="contact.interestBusiness">Business Opportunities
+                                </option>
+                                <option value="other" data-i18n="contact.interestOther">Other</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <textarea id="message" name="message" placeholder="Tell us about your investment goals..."
-                                rows="4"></textarea>
+                                data-i18n-placeholder="contact.messagePlaceholder" rows="4"></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+                        <button type="submit" class="btn btn-primary btn-full" data-i18n="contact.sendButton">Send
+                            Message</button>
                     </form>
                 </div>
             </div>
@@ -437,22 +674,25 @@
                         <img src="Site Media/IM_Global_HighRes_Logo - Edited.png" alt="IM Global"
                             class="logo-img footer-logo">
                     </a>
-                    <p>Your bridge to U.S. real estate investment.</p>
+                    <p data-i18n="footer.tagline">Your bridge to U.S. real estate investment.</p>
                 </div>
                 <div class="footer-links">
-                    <a href="#why-us">Why Us</a>
-                    <a href="#investments">Investments</a>
-                    <a href="#process">Process</a>
-                    <a href="#team">Our Team</a>
-                    <a href="#contact">Contact</a>
+                    <a href="#why-us" data-i18n="nav.whyUs">Why Us</a>
+                    <a href="#investments" data-i18n="nav.investments">Investments</a>
+                    <a href="#process" data-i18n="nav.process">Process</a>
+                    <a href="#team" data-i18n="nav.team">Our Team</a>
+                    <a href="#contact" data-i18n="contact.titleHighlight">Contact</a>
                 </div>
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2024 IM Global Inc. All rights reserved.</p>
-                <p class="disclaimer">All information provided on this website is deemed reliable but not guaranteed. It
+                <p class="disclaimer" data-i18n="footer.disclaimer">All information provided on this website is deemed
+                    reliable but not guaranteed. It
                     is intended for informational purposes only and should not be construed as legal, financial, or real
                     estate advice. Users are encouraged to conduct their own due diligence and consult appropriate
-                    professionals before making any real estate decisions.</p>
+                    professionals before making any real estate decisions. Property listings and information are subject
+                    to change without notice. This website does not constitute a solicitation if your property is
+                    already listed with another real estate broker.</p>
             </div>
         </div>
     </footer>

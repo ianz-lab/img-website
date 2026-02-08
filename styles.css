@@ -177,13 +177,13 @@ body {
 }
 
 .logo-img {
-    height: 45px;
+    height: 160px;
     width: auto;
     display: block;
 }
 
 .footer-logo {
-    height: 60px;
+    height: 200px;
 }
 
 .nav-menu {
@@ -1156,4 +1156,457 @@ body {
     .contact-link {
         justify-content: center;
     }
+}
+
+/* ===================================
+   Gold Outline SVG Icons
+   =================================== */
+.gold-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--color-gold);
+    stroke: var(--color-gold);
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.feature-icon .gold-icon {
+    width: 28px;
+    height: 28px;
+}
+
+.investment-icon .gold-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 8px;
+}
+
+.contact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.contact-icon .gold-icon {
+    width: 18px;
+    height: 18px;
+}
+
+/* ===================================
+   Language Toggle
+   =================================== */
+.lang-toggle-wrapper {
+    margin-left: 8px;
+}
+
+.lang-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(201, 169, 98, 0.1);
+    border: 1px solid var(--color-border-gold);
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.lang-toggle:hover {
+    background: rgba(201, 169, 98, 0.2);
+    border-color: var(--color-gold);
+}
+
+.lang-option {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-text-muted);
+    transition: color var(--transition-fast);
+}
+
+.lang-option.active {
+    color: var(--color-gold);
+}
+
+.lang-divider {
+    color: var(--color-text-muted);
+    font-size: 0.75rem;
+}
+
+/* ===================================
+   Expandable Content / Read More
+   =================================== */
+.feature-expand {
+    margin-top: 12px;
+}
+
+.expand-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    color: var(--color-gold);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 0;
+    transition: all var(--transition-fast);
+}
+
+.expand-btn:hover {
+    color: var(--color-gold-light);
+}
+
+.expand-btn:hover .expand-icon {
+    transform: translateY(2px);
+}
+
+.expand-icon {
+    width: 16px;
+    height: 16px;
+    transition: transform var(--transition-fast);
+}
+
+.expand-btn.active .expand-icon {
+    transform: rotate(180deg);
+}
+
+.expand-content {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.4s ease;
+    margin-top: 0;
+}
+
+.expand-content.active {
+    max-height: 500px;
+    opacity: 1;
+    margin-top: 12px;
+}
+
+.expand-content p {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    padding: 16px;
+    background: rgba(201, 169, 98, 0.05);
+    border-left: 2px solid var(--color-gold);
+    border-radius: 0 8px 8px 0;
+}
+
+.feature-list {
+    list-style: none;
+    margin-top: 12px;
+    padding: 16px;
+    background: rgba(201, 169, 98, 0.05);
+    border-left: 2px solid var(--color-gold);
+    border-radius: 0 8px 8px 0;
+}
+
+.feature-list li {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    padding: 8px 0;
+    line-height: 1.6;
+}
+
+.feature-list li:first-child {
+    padding-top: 0;
+}
+
+.feature-list li:last-child {
+    padding-bottom: 0;
+}
+
+/* ===================================
+   Process Step List
+   =================================== */
+.step-list {
+    list-style: none;
+    margin-top: 16px;
+    padding-left: 0;
+}
+
+.step-list li {
+    color: var(--color-text-secondary);
+    font-size: 0.9375rem;
+    padding: 8px 0;
+    padding-left: 20px;
+    position: relative;
+    line-height: 1.6;
+}
+
+.step-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+    background: var(--color-gold);
+    border-radius: 50%;
+}
+
+.step-list li strong {
+    color: var(--color-text-primary);
+}
+
+/* ===================================
+   Contact CTA Text
+   =================================== */
+.contact-cta-text {
+    color: var(--color-text-secondary);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    margin-bottom: 24px;
+}
+
+/* ===================================
+   Founders Card Enhancements
+   =================================== */
+.founders-text p {
+    margin-bottom: 16px;
+}
+
+.founders-text p:last-of-type:not(.founders-signature) {
+    margin-bottom: 24px;
+}
+
+/* ===================================
+   Investments Section Subtitle Enhancement
+   =================================== */
+.investments-header .section-subtitle {
+    max-width: 900px;
+}
+
+/* ===================================
+   Process Section Subtitle Enhancement
+   =================================== */
+.process-header .section-subtitle {
+    max-width: 900px;
+}
+
+/* ===================================
+   Team Section Intro Enhancement
+   =================================== */
+.team-header .section-subtitle {
+    max-width: 900px;
+}
+
+/* ===================================
+   Mobile Language Toggle
+   =================================== */
+@media (max-width: 768px) {
+    .lang-toggle-wrapper {
+        margin-left: 0;
+        margin-top: 16px;
+        padding-top: 16px;
+        border-top: 1px solid var(--color-border);
+        width: 100%;
+    }
+
+    .lang-toggle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .logo-img {
+        height: 70px;
+    }
+
+    .footer-logo {
+        height: 85px;
+    }
+}
+
+/* ===================================
+   Gold Foil Texture Effect
+   =================================== */
+
+/* Gold foil texture for text */
+.gold-foil-text {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 300px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s ease-in-out infinite;
+}
+
+/* Gold foil for icons (SVG) */
+.gold-foil-icon {
+    filter: url(#gold-foil-filter);
+}
+
+/* Gold foil border effect */
+.gold-foil-border {
+    border-image: url('Site Media/gold_foil_texture.png') 30 round;
+}
+
+/* Gold foil button */
+.btn-primary {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 200px;
+    color: #000;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    animation: shimmer 8s ease-in-out infinite;
+}
+
+.btn-primary:hover {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 200px;
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(201, 169, 98, 0.4);
+}
+
+/* Gold foil for stat numbers */
+.stat-number {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 300px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s ease-in-out infinite;
+}
+
+.stat-suffix {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 300px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Gold foil for section title highlights */
+.gold-text {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 300px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 8s ease-in-out infinite;
+}
+
+/* Gold foil for founders card title and signature */
+.founders-text h3,
+.founders-signature {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 300px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Gold foil for team roles */
+.team-role {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 200px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Gold foil for step numbers */
+.step-number {
+    border: 2px solid transparent;
+    background:
+        linear-gradient(var(--color-bg-card), var(--color-bg-card)) padding-box,
+        url('Site Media/gold_foil_texture.png') border-box;
+    background-size: auto, 150px;
+}
+
+.step-number {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 150px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Gold foil for hero badge border */
+.hero-badge {
+    border: 1px solid transparent;
+    background:
+        rgba(201, 169, 98, 0.1) padding-box,
+        url('Site Media/gold_foil_texture.png') border-box;
+    background-size: auto, 200px;
+}
+
+/* Gold foil for nav CTA button */
+.nav-cta {
+    background: url('Site Media/gold_foil_texture.png') !important;
+    background-size: 150px !important;
+    color: #000 !important;
+    font-weight: 600;
+}
+
+.nav-cta:hover {
+    filter: brightness(1.1);
+    background: url('Site Media/gold_foil_texture.png') !important;
+    background-size: 150px !important;
+}
+
+/* Gold foil for image frame */
+.image-frame {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 200px;
+}
+
+/* Gold foil for lang toggle active option */
+.lang-option.active {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 100px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Shimmer animation for gold foil effect */
+@keyframes shimmer {
+    0% {
+        background-position: 0% 0%;
+    }
+
+    50% {
+        background-position: 100% 100%;
+    }
+
+    100% {
+        background-position: 0% 0%;
+    }
+}
+
+/* Gold foil for expand button text */
+.expand-btn {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 150px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Gold foil for feature list bullet points */
+.step-list li::before {
+    background: url('Site Media/gold_foil_texture.png');
+    background-size: 50px;
+}
+
+/* Gold foil for expand content left border */
+.expand-content p,
+.feature-list {
+    border-left: 2px solid;
+    border-image: url('Site Media/gold_foil_texture.png') 1;
 }
