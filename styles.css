@@ -177,7 +177,7 @@ body {
 }
 
 .logo-img {
-    height: 50px;
+    height: 65px;
     width: auto;
     display: block;
 }
@@ -703,13 +703,17 @@ body {
     width: 120px;
     height: 120px;
     flex-shrink: 0;
-    border-radius: 12px;
+    border-radius: 50%;
     overflow: hidden;
+    padding: 4px;
+    background: url('Site Media/goldfoil.jpg') center/cover;
+    box-shadow: 0 4px 15px rgba(201, 169, 98, 0.3);
 }
 
 .team-photo.small {
     width: 80px;
     height: 80px;
+    padding: 3px;
 }
 
 .photo-placeholder {
@@ -727,6 +731,36 @@ body {
 
 .team-photo.small .photo-placeholder {
     font-size: 1rem;
+    border-radius: 50%;
+}
+
+.team-photo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 20%;
+    border-radius: 50%;
+}
+
+/* Individual photo adjustments to center faces */
+.photo-melda {
+    object-position: center 18%;
+}
+
+.photo-ian {
+    object-position: center 5%;
+}
+
+.photo-saime {
+    object-position: center 15%;
+}
+
+.photo-ayse {
+    object-position: center 40%;
+}
+
+.photo-tayfun {
+    object-position: center 25%;
 }
 
 .team-info h3 {
@@ -810,6 +844,13 @@ body {
 .contact-person h4 {
     font-family: var(--font-display);
     font-size: 1.125rem;
+    margin-bottom: 4px;
+}
+
+.contact-dre {
+    display: block;
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
     margin-bottom: 12px;
 }
 
