@@ -1,0 +1,15 @@
+// IM Global Inc. Website Outline Idea
+
+1. Public Page
+- what we currently have, the public general info page about us
+
+2. Agent Page
+- This will be a page that agents will be able to login based on email/password or google login. Here we will be able to share our presentation with them, have a system where we can track and have communication or share things about clients they refer, keep our agreements, payments etc.. We will also have info like we have included in the agent section of our presentation, as well as a section of good current opportunities for them to pitch to potential referral clients. 
+
+3. Client Page
+- this will be a page that clients will be able to login based on email/password or google login.  Here I imagine being the portal for the clients and their overall journey/experience with us.  We can store any documents/agreements somewhere here, keep track of relationships established with our team (attorney, cpa, lender, banker, etc..), have that team members contact info etc.., and have a section where opportunities are displayed for analysis as well as notes/discussion about the opportunity that we can go back and forth with while contemplating/making offers etc.  We will be able to share documents for our consulting and real estate transactions here and keep them organized in a simple to navigate/manage way. 
+
+4. Administrator Page
+- this will be the "master backend" for the website.  this is where Melda and I are able to manage/modify the content of all aspects of the site.  We will be able to easily modify anything displayed in the English and Turkish version of the public page, agent pages, and client pages.  here we will have a system for making a new login for agents and clients.  They will share their email with us and we will add their email to a list of pages and set their default password that they can then change if they choose to. 
+
+5. Please go over the best way to have a database to keep all of this data and structure anything else needed for security/login and data separation for sensitive info, currently I am used to using Firebase, but am open to other suggestions for this use case.  Keep in mind I am an amateur at setting this kind of thing up.  
