@@ -418,11 +418,12 @@ body {
 }
 
 .stat-number {
-    font-family: var(--font-display);
+    font-family: 'Inter', var(--font-body);
     font-size: 3.5rem;
-    font-weight: 600;
+    font-weight: 300;
     color: var(--color-gold);
     line-height: 1;
+    letter-spacing: -0.02em;
 }
 
 .stat-suffix {

@@ -72,6 +72,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             statNumbers.forEach(stat => {
                 const target = parseInt(stat.getAttribute('data-target'));
+                const prefix = stat.getAttribute('data-prefix') || '';
+                const suffix = stat.getAttribute('data-suffix') || '';
                 const duration = 2000;
                 const startTime = Date.now();
 
@@ -83,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const easeOut = 1 - Math.pow(1 - progress, 3);
                     const current = Math.round(target * easeOut);
 
-                    stat.textContent = '$' + current;
+                    stat.textContent = prefix + current + suffix;
 
                     if (progress < 1) {
                         requestAnimationFrame(updateNumber);
