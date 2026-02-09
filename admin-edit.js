@@ -71,16 +71,16 @@
         const toolbar = document.createElement('div');
         toolbar.className = 'admin-toolbar';
         toolbar.innerHTML = `
-            <button class="admin-toolbar-toggle" id="adminToggle" title="Collapse toolbar">▲</button>
+            <button class="admin-toolbar-toggle" id="adminToggle" title="Collapse toolbar">&#9650;</button>
             <div class="admin-toolbar-content">
                 <div class="admin-toolbar-left">
                     <span class="admin-toolbar-title">Edit Mode</span>
                     <span class="admin-toolbar-status" id="adminStatus">No pending changes</span>
                 </div>
                 <div class="admin-toolbar-right">
-                    <button class="admin-btn admin-btn-instructions" id="adminInstructions">📖 How to Deploy</button>
-                    <button class="admin-btn admin-btn-export" id="adminExport" disabled>📥 Export Changes</button>
-                    <button class="admin-btn admin-btn-exit" id="adminExit">✕ Exit Edit Mode</button>
+                    <button class="admin-btn admin-btn-instructions" id="adminInstructions">&#128214; How to Deploy</button>
+                    <button class="admin-btn admin-btn-export" id="adminExport" disabled>&#128229; Export Changes</button>
+                    <button class="admin-btn admin-btn-exit" id="adminExit">&#10005; Exit Edit Mode</button>
                 </div>
             </div>
         `;
@@ -94,7 +94,7 @@
         // Toggle collapse
         document.getElementById('adminToggle').addEventListener('click', function () {
             toolbar.classList.toggle('collapsed');
-            this.textContent = toolbar.classList.contains('collapsed') ? '▼' : '▲';
+            this.textContent = toolbar.classList.contains('collapsed') ? '\u25BC' : '\u25B2';
             this.title = toolbar.classList.contains('collapsed') ? 'Expand toolbar' : 'Collapse toolbar';
             document.body.classList.toggle('admin-mode-collapsed', toolbar.classList.contains('collapsed'));
         });
@@ -108,7 +108,7 @@
             // Create edit button
             const btn = document.createElement('button');
             btn.className = 'admin-edit-btn';
-            btn.innerHTML = '✏️';
+            btn.innerHTML = '&#9999;&#65039;';
             btn.title = 'Edit this text';
             btn.setAttribute('data-edit-key', el.getAttribute('data-i18n'));
 
@@ -135,67 +135,55 @@
         });
     }
 
+    // Helper: walk through a string to extract a quoted value, handling escaped quotes
+    function extractQuotedValue(text, startIdx) {
+        let end = startIdx;
+        let esc = false;
+        for (let i = startIdx; i < text.length; i++) {
+            if (esc) { esc = false; continue; }
+            if (text[i] === '\\') { esc = true; continue; }
+            if (text[i] === "'") { end = i; break; }
+        }
+        return {
+            value: text.substring(startIdx, end).replace(/\\'/g, "'").replace(/\\n/g, '\n'),
+            endIdx: end
+        };
+    }
+
+    // Helper: extract a translation value for a key from a section of script.js
+    function extractValueFromSection(section, key) {
+        var keyPattern = new RegExp("['\"]" + escapeRegex(key) + "['\"]:\\s*'");
+        var keyMatch = section.match(keyPattern);
+        if (keyMatch) {
+            var startIdx = section.indexOf(keyMatch[0]) + keyMatch[0].length;
+            return extractQuotedValue(section, startIdx).value;
+        }
+        return '';
+    }
+
     function openEditModal(key, element) {
-        // Get translation values from the main translations object
-        // We need to access it via window scope since it's defined in script.js
         let enValue = '';
         let trValue = '';
 
-        // Try to get the original translations from script.js
-        // The translations object is inside the DOMContentLoaded closure, so we need to extract from the script
         const scriptEl = document.querySelector('script[src="script.js"]');
         if (scriptEl) {
-            // Fetch and parse translations from script.js
             fetch('script.js')
                 .then(response => response.text())
                 .then(scriptContent => {
-                    // Helper function to extract value for a key from a section
-                    function extractValue(section, key) {
-                        // Find the key in the section
-                        const keyPattern = new RegExp(`['"]${escapeRegex(key)}['"]:\\s*'`);
-                        const keyMatch = section.match(keyPattern);
-
-                        if (keyMatch) {
-                            // Find where the value starts
-                            const startIdx = section.indexOf(keyMatch[0]) + keyMatch[0].length;
-                            // Find the closing quote (not escaped)
-                            let endIdx = startIdx;
-                            let inEscape = false;
-                            for (let i = startIdx; i < section.length; i++) {
-                                if (inEscape) {
-                                    inEscape = false;
-                                    continue;
-                                }
-                                if (section[i] === '\\') {
-                                    inEscape = true;
-                                    continue;
-                                }
-                                if (section[i] === "'") {
-                                    endIdx = i;
-                                    break;
-                                }
-                            }
-                            return section.substring(startIdx, endIdx)
-                                .replace(/\\'/g, "'")
-                                .replace(/\\n/g, '\n');
-                        }
-                        return '';
-                    }
-
                     // Parse out EN and TR sections
-                    const enSectionMatch = scriptContent.match(/translations\s*=\s*\{[\s\S]*?en:\s*\{([\s\S]*?)\},\s*tr:/);
-                    const trSectionMatch = scriptContent.match(/tr:\s*\{([\s\S]*?)\}\s*\};/);
+                    var enSectionMatch = scriptContent.match(/translations\s*=\s*\{[\s\S]*?en:\s*\{([\s\S]*?)\},\s*tr:/);
+                    var trSectionMatch = scriptContent.match(/tr:\s*\{([\s\S]*?)\}\s*\};/);
 
                     if (enSectionMatch && enSectionMatch[1]) {
-                        enValue = extractValue(enSectionMatch[1], key);
+                        enValue = extractValueFromSection(enSectionMatch[1], key);
                     }
 
                     if (trSectionMatch && trSectionMatch[1]) {
-                        trValue = extractValue(trSectionMatch[1], key);
+                        trValue = extractValueFromSection(trSectionMatch[1], key);
                     }
 
                     // Override with pending changes if they exist
-                    const savedChange = pendingChanges[key] || {};
+                    var savedChange = pendingChanges[key] || {};
                     if (savedChange.en) enValue = savedChange.en;
                     if (savedChange.tr) trValue = savedChange.tr;
 
@@ -204,19 +192,17 @@
                 })
                 .catch(err => {
                     console.error('Error loading translations:', err);
-                    // Fallback: use current text
-                    const currentLang = document.documentElement.lang || 'en';
-                    const currentText = element.textContent.replace('✏️', '').trim();
-                    const savedChange = pendingChanges[key] || {};
+                    var currentLang = document.documentElement.lang || 'en';
+                    var currentText = element.textContent.replace(/\u270F\uFE0F/g, '').trim();
+                    var savedChange = pendingChanges[key] || {};
                     enValue = savedChange.en || (currentLang === 'en' ? currentText : '');
                     trValue = savedChange.tr || (currentLang === 'tr' ? currentText : '');
                     showEditModalUI(key, element, enValue, trValue);
                 });
         } else {
-            // Fallback if script tag not found
-            const currentLang = document.documentElement.lang || 'en';
-            const currentText = element.textContent.replace('✏️', '').trim();
-            const savedChange = pendingChanges[key] || {};
+            var currentLang = document.documentElement.lang || 'en';
+            var currentText = element.textContent.replace(/\u270F\uFE0F/g, '').trim();
+            var savedChange = pendingChanges[key] || {};
             enValue = savedChange.en || (currentLang === 'en' ? currentText : '');
             trValue = savedChange.tr || (currentLang === 'tr' ? currentText : '');
             showEditModalUI(key, element, enValue, trValue);
@@ -238,15 +224,15 @@
                 <div class="admin-modal-body admin-modal-body-split">
                     <div class="admin-field">
                         <label class="admin-field-label">
-                            <span class="admin-field-flag">🇺🇸</span> English
+                            <span class="admin-field-flag">&#127482;&#127480;</span> English
                         </label>
                         <textarea class="admin-field-input" id="editEnglish" placeholder="Enter English text...">${escapeHtml(enValue)}</textarea>
                     </div>
                     <div class="admin-field">
                         <label class="admin-field-label">
-                            <span class="admin-field-flag">🇹🇷</span> Türkçe
+                            <span class="admin-field-flag">&#127481;&#127479;</span> T&uuml;rk&ccedil;e
                         </label>
-                        <textarea class="admin-field-input" id="editTurkish" placeholder="Türkçe metni girin...">${escapeHtml(trValue)}</textarea>
+                        <textarea class="admin-field-input" id="editTurkish" placeholder="T&uuml;rk&ccedil;e metni girin...">${escapeHtml(trValue)}</textarea>
                     </div>
                 </div>
                 <div class="admin-modal-footer">
@@ -308,7 +294,7 @@
         // Re-add edit button (since we replaced textContent)
         const btn = document.createElement('button');
         btn.className = 'admin-edit-btn';
-        btn.innerHTML = '✏️';
+        btn.innerHTML = '&#9999;&#65039;';
         btn.title = 'Edit this text';
         btn.addEventListener('click', function (e) {
             e.preventDefault();
@@ -329,7 +315,7 @@
 
         Object.keys(pendingChanges).forEach(key => {
             const change = pendingChanges[key];
-            const element = document.querySelector(`[data-i18n="${key}"]`);
+            const element = document.querySelector('[data-i18n="' + key + '"]');
 
             if (element && change[currentLang]) {
                 element.textContent = change[currentLang];
@@ -344,7 +330,7 @@
         const exportBtn = document.getElementById('adminExport');
 
         if (count > 0) {
-            statusEl.textContent = `${count} pending change${count > 1 ? 's' : ''}`;
+            statusEl.textContent = count + ' pending change' + (count > 1 ? 's' : '');
             statusEl.classList.add('has-changes');
             exportBtn.disabled = false;
         } else {
@@ -360,43 +346,43 @@
         overlay.innerHTML = `
             <div class="admin-modal">
                 <div class="admin-modal-header">
-                    <div class="admin-modal-title">📖 How to Deploy Your Changes</div>
+                    <div class="admin-modal-title">&#128214; How to Deploy Your Changes</div>
                     <button class="admin-modal-close">&times;</button>
                 </div>
                 <div class="admin-instructions">
-                    <h3>📝 Making Edits</h3>
+                    <h3>&#128221; Making Edits</h3>
                     <ol>
-                        <li>Click the <strong>✏️ edit button</strong> next to any text you want to change</li>
+                        <li>Click the <strong>&#9999;&#65039; edit button</strong> next to any text you want to change</li>
                         <li>Edit both <strong>English</strong> and <strong>Turkish</strong> versions in the popup</li>
-                        <li>Click <strong>"Save Changes"</strong> — your edits are saved locally</li>
+                        <li>Click <strong>"Save Changes"</strong> &mdash; your edits are saved locally</li>
                         <li>Repeat for all text you want to update</li>
                     </ol>
-                    <p class="step-note">💡 Your changes are saved in your browser and will persist until you export them.</p>
+                    <p class="step-note">&#128161; Your changes are saved in your browser and will persist until you export them.</p>
                     
                     <hr>
                     
-                    <h3>📥 Exporting & Deploying</h3>
+                    <h3>&#128229; Exporting &amp; Deploying</h3>
                     <ol>
                         <li>When you're done editing, click <strong>"Export Changes"</strong> in the toolbar</li>
                         <li>A file called <code>script.js</code> will download to your computer</li>
                         <li>Open your website folder: <code>C:\\Users\\ianze\\IMG_Website</code></li>
                         <li><strong>Replace</strong> the existing <code>script.js</code> with the downloaded file</li>
                         <li>Open <strong>GitHub Desktop</strong> (or your Git tool)</li>
-                        <li>You'll see the changes — add a commit message like <em>"Updated website text"</em></li>
+                        <li>You'll see the changes &mdash; add a commit message like <em>"Updated website text"</em></li>
                         <li>Click <strong>"Commit"</strong> then <strong>"Push"</strong></li>
-                        <li>Wait 1-2 minutes — Vercel will auto-deploy your changes!</li>
+                        <li>Wait 1-2 minutes &mdash; Vercel will auto-deploy your changes!</li>
                     </ol>
                     
                     <div class="quick-tip">
-                        <h4>✅ Quick Checklist</h4>
-                        <p>Download → Replace script.js → Git Commit → Push → Done!</p>
+                        <h4>&#9989; Quick Checklist</h4>
+                        <p>Download &rarr; Replace script.js &rarr; Git Commit &rarr; Push &rarr; Done!</p>
                     </div>
                     
                     <hr>
                     
-                    <h3>🔄 Starting Fresh</h3>
+                    <h3>&#128260; Starting Fresh</h3>
                     <p>To clear all pending changes and start over, click the button below:</p>
-                    <button class="admin-btn" id="clearChanges" style="margin-top: 12px; background: #dc2626; color: #fff;">🗑️ Clear All Pending Changes</button>
+                    <button class="admin-btn" id="clearChanges" style="margin-top: 12px; background: #dc2626; color: #fff;">&#128465;&#65039; Clear All Pending Changes</button>
                 </div>
             </div>
         `;
@@ -423,50 +409,74 @@
         });
     }
 
+    // ============================================================
+    // EXPORT FUNCTION - handles EN and TR sections independently
+    // ============================================================
     function exportChanges() {
         if (Object.keys(pendingChanges).length === 0) {
             alert('No changes to export!');
             return;
         }
 
-        // Fetch the current script.js
         fetch('script.js')
-            .then(response => response.text())
-            .then(scriptContent => {
-                // Apply changes to the script content
-                let updatedScript = scriptContent;
+            .then(function (response) { return response.text(); })
+            .then(function (scriptContent) {
+                // Split the script into EN section and TR section using regex
+                var sectionMatch = scriptContent.match(/([\s\S]*?en:\s*\{)([\s\S]*?)(\},\s*tr:\s*\{)([\s\S]*?)(\}\s*\};)([\s\S]*)/);
 
-                Object.keys(pendingChanges).forEach(key => {
-                    const change = pendingChanges[key];
+                if (!sectionMatch) {
+                    alert('Error: Could not parse translations structure in script.js');
+                    return;
+                }
 
-                    // Update English
+                var beforeEn = sectionMatch[1];
+                var enBlock = sectionMatch[2];
+                var middle = sectionMatch[3];
+                var trBlock = sectionMatch[4];
+                var closing = sectionMatch[5];
+                var afterAll = sectionMatch[6];
+
+                // Replace a key's value within a specific section block
+                function replaceKeyInBlock(block, key, newValue) {
+                    var escaped = newValue.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+                    var k = escapeRegex(key);
+                    var keyRegex = new RegExp("['\"]" + k + "['\"]:\\s*'");
+                    var m = block.match(keyRegex);
+                    if (!m) return block;
+
+                    var start = block.indexOf(m[0]) + m[0].length;
+                    var end = start;
+                    var esc = false;
+                    for (var i = start; i < block.length; i++) {
+                        if (esc) { esc = false; continue; }
+                        if (block[i] === '\\') { esc = true; continue; }
+                        if (block[i] === "'") { end = i; break; }
+                    }
+                    return block.substring(0, start) + escaped + block.substring(end);
+                }
+
+                // Apply each pending change to the correct section
+                var keys = Object.keys(pendingChanges);
+                for (var idx = 0; idx < keys.length; idx++) {
+                    var key = keys[idx];
+                    var change = pendingChanges[key];
                     if (change.en) {
-                        const enPattern = new RegExp(`('${escapeRegex(key)}':\\s*')([^']*)(')`, 'g');
-                        const enPatternDouble = new RegExp(`("${escapeRegex(key)}":\\s*")([^"]*)(")`, 'g');
-                        const escapedEnValue = change.en.replace(/'/g, "\\'").replace(/\n/g, '\\n');
-
-                        updatedScript = updatedScript.replace(enPattern, `$1${escapedEnValue}$3`);
-                        updatedScript = updatedScript.replace(enPatternDouble, `$1${escapedEnValue}$3`);
+                        enBlock = replaceKeyInBlock(enBlock, key, change.en);
                     }
-
-                    // Update Turkish
                     if (change.tr) {
-                        const trPattern = new RegExp(`('${escapeRegex(key)}':\\s*')([^']*)(')`, 'g');
-                        const trPatternDouble = new RegExp(`("${escapeRegex(key)}":\\s*")([^"]*)(")`, 'g');
-                        const escapedTrValue = change.tr.replace(/'/g, "\\'").replace(/\n/g, '\\n');
-
-                        updatedScript = updatedScript.replace(trPattern, `$1${escapedTrValue}$3`);
-                        updatedScript = updatedScript.replace(trPatternDouble, `$1${escapedTrValue}$3`);
+                        trBlock = replaceKeyInBlock(trBlock, key, change.tr);
                     }
-                });
+                }
 
-                // Download the updated script
+                // Reassemble the full script
+                var updatedScript = beforeEn + enBlock + middle + trBlock + closing + afterAll;
+
+                // Download
                 downloadFile('script.js', updatedScript);
 
-                // Show success message
-                alert('✅ script.js downloaded!\n\nNext steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)');
+                alert('script.js downloaded!\n\nNext steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)');
             })
-            .catch(error => {
+            .catch(function (error) {
                 console.error('Error exporting:', error);
                 alert('Error exporting changes. Please try again.');
             });
@@ -488,7 +498,7 @@
         const count = Object.keys(pendingChanges).length;
 
         if (count > 0) {
-            if (!confirm(`You have ${count} pending change(s) that haven't been exported.\n\nAre you sure you want to exit? Your changes will be saved and you can export them later.`)) {
+            if (!confirm('You have ' + count + ' pending change(s) that haven\'t been exported.\n\nAre you sure you want to exit? Your changes will be saved and you can export them later.')) {
                 return;
             }
         }
