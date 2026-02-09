@@ -485,6 +485,13 @@
                 // Reassemble the full script
                 var updatedScript = beforeEn + enBlock + middle + trBlock + closing + afterAll;
 
+                // Ensure the initialization fix is always preserved in exported files
+                // Replace old Turkish-only init with always-apply init
+                updatedScript = updatedScript.replace(
+                    /\/\/\s*Initialize language on page load\s*\n\s*if\s*\(currentLang === 'tr'\)\s*\{\s*\n\s*applyTranslations\('tr'\);\s*\n\s*updateLangToggleUI\('tr'\);\s*\n\s*\}/,
+                    "// Initialize language on page load - always apply to pick up any text changes\n    applyTranslations(currentLang);\n    updateLangToggleUI(currentLang);"
+                );
+
                 // Download
                 downloadFile('script.js', updatedScript);
 
