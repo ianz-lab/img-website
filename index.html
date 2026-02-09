@@ -721,6 +721,14 @@
     </footer>
 
     <script src="script.js"></script>
+
+    <!-- Admin Edit Mode (only loads with secret URL parameter) -->
+    <script>
+        if (new URLSearchParams(window.location.search).get('edit') === 'imglob2024admin') {
+            document.write('<link rel="stylesheet" href="admin-edit.css">');
+            document.write('<script src="admin-edit.js"><\/script>');
+        }
+    </script>
 </body>
 
 </html>

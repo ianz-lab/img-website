@@ -1,0 +1,441 @@
+/* ===================================
+   IM Global - Admin Edit Mode Styles
+   =================================== */
+
+/* Admin Toolbar */
+.admin-toolbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.3s ease;
+}
+
+.admin-toolbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+.admin-toolbar-toggle {
+    background: rgba(212, 175, 55, 0.9);
+    border: none;
+    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #1a1a2e;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.admin-toolbar-toggle:hover {
+    background: #d4af37;
+    transform: scale(1.1);
+}
+
+.admin-toolbar.collapsed {
+    transform: translateY(-100%);
+}
+
+.admin-toolbar.collapsed .admin-toolbar-toggle {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    transform: translateY(56px);
+    z-index: 10001;
+}
+
+.admin-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.admin-toolbar-title {
+    color: #d4af37;
+    font-weight: 600;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-toolbar-title::before {
+    content: "✏️";
+}
+
+.admin-toolbar-status {
+    color: #888;
+    font-size: 12px;
+}
+
+.admin-toolbar-status.has-changes {
+    color: #22c55e;
+}
+
+.admin-toolbar-right {
+    display: flex;
+    gap: 12px;
+}
+
+.admin-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-btn-instructions {
+    background: #2d3748;
+    color: #fff;
+}
+
+.admin-btn-instructions:hover {
+    background: #4a5568;
+}
+
+.admin-btn-export {
+    background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+    color: #1a1a2e;
+}
+
+.admin-btn-export:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.admin-btn-export:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.admin-btn-exit {
+    background: #dc2626;
+    color: #fff;
+}
+
+.admin-btn-exit:hover {
+    background: #b91c1c;
+}
+
+/* Body offset when admin toolbar is visible */
+body.admin-mode {
+    padding-top: 56px;
+}
+
+body.admin-mode-collapsed {
+    padding-top: 0;
+}
+
+/* Edit buttons next to translatable elements */
+.admin-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    background: rgba(212, 175, 55, 0.9);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 6px;
+    vertical-align: middle;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.admin-edit-btn:hover {
+    background: #d4af37;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(212, 175, 55, 0.5);
+}
+
+/* Edit Modal */
+.admin-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.admin-modal {
+    background: #1a1a2e;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* Wide modal for side-by-side editing */
+.admin-modal.admin-modal-wide {
+    max-width: 900px;
+}
+
+.admin-modal-body-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.admin-modal-body-split .admin-field {
+    margin-bottom: 0;
+}
+
+.admin-modal-body-split .admin-field-input {
+    min-height: 150px;
+}
+
+.admin-modal-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid #2d3748;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-modal-title {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.admin-modal-key {
+    color: #d4af37;
+    font-size: 13px;
+    font-family: monospace;
+    background: rgba(212, 175, 55, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.admin-modal-close {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.admin-modal-close:hover {
+    color: #fff;
+}
+
+.admin-modal-body {
+    padding: 24px;
+}
+
+.admin-field {
+    margin-bottom: 20px;
+}
+
+.admin-field:last-child {
+    margin-bottom: 0;
+}
+
+.admin-field-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    font-size: 13px;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.admin-field-flag {
+    font-size: 16px;
+}
+
+.admin-field-input {
+    width: 100%;
+    background: #0d1117;
+    border: 1px solid #2d3748;
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    resize: vertical;
+    min-height: 80px;
+    transition: border-color 0.2s ease;
+}
+
+.admin-field-input:focus {
+    outline: none;
+    border-color: #d4af37;
+}
+
+.admin-modal-footer {
+    padding: 16px 24px;
+    border-top: 1px solid #2d3748;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.admin-modal-btn {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.admin-modal-btn-cancel {
+    background: #2d3748;
+    color: #fff;
+}
+
+.admin-modal-btn-cancel:hover {
+    background: #4a5568;
+}
+
+.admin-modal-btn-save {
+    background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+    color: #1a1a2e;
+}
+
+.admin-modal-btn-save:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+/* Instructions Modal */
+.admin-instructions {
+    padding: 24px;
+}
+
+.admin-instructions h3 {
+    color: #d4af37;
+    font-size: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-instructions ol {
+    color: #ccc;
+    font-size: 14px;
+    line-height: 1.8;
+    padding-left: 20px;
+}
+
+.admin-instructions li {
+    margin-bottom: 12px;
+}
+
+.admin-instructions code {
+    background: #0d1117;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: monospace;
+    color: #d4af37;
+}
+
+.admin-instructions .step-note {
+    color: #888;
+    font-size: 12px;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.admin-instructions hr {
+    border: none;
+    border-top: 1px solid #2d3748;
+    margin: 20px 0;
+}
+
+.admin-instructions .quick-tip {
+    background: rgba(34, 197, 94, 0.1);
+    border-left: 3px solid #22c55e;
+    padding: 12px 16px;
+    border-radius: 0 8px 8px 0;
+    margin-top: 16px;
+}
+
+.admin-instructions .quick-tip h4 {
+    color: #22c55e;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.admin-instructions .quick-tip p {
+    color: #888;
+    font-size: 13px;
+    margin: 0;
+}
+
+/* Changed indicator on elements */
+[data-i18n].admin-changed {
+    outline: 2px dashed #22c55e;
+    outline-offset: 2px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .admin-toolbar {
+        flex-direction: column;
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .admin-toolbar-left,
+    .admin-toolbar-right {
+        width: 100%;
+        justify-content: center;
+    }
+
+    body.admin-mode {
+        padding-top: 100px;
+    }
+
+    .admin-modal {
+        margin: 10px;
+        max-height: 85vh;
+    }
+
+    .admin-edit-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+
+    .admin-modal-body-split {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-modal.admin-modal-wide {
+        max-width: 100%;
+    }
+}

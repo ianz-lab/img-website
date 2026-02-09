@@ -1,0 +1,423 @@
+# IM Global Portal System
+## Product Requirements Document (PRD) - Draft v1
+
+---
+
+## 1. System Overview
+
+### What Are We Building?
+
+A **Multi-Portal Client Relationship Management System** consisting of:
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                         IM GLOBAL PORTAL SYSTEM                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   ┌─────────────┐   ┌─────────────┐   ┌─────────────┐              │
+│   │   PUBLIC    │   │   AGENT     │   │   CLIENT    │              │
+│   │   WEBSITE   │   │   PORTAL    │   │   PORTAL    │              │
+│   │             │   │             │   │             │              │
+│   │  Marketing  │   │  Referral   │   │  Document   │              │
+│   │  Info       │   │  Tracking   │   │  Management │              │
+│   │  EN/TR      │   │  Payments   │   │  Deal Flow  │              │
+│   │             │   │  Resources  │   │  Team Info  │              │
+│   └─────────────┘   └─────────────┘   └─────────────┘              │
+│          │                 │                 │                      │
+│          └────────────────┬┴─────────────────┘                      │
+│                           ▼                                         │
+│                  ┌─────────────────┐                                │
+│                  │     ADMIN       │                                │
+│                  │   DASHBOARD     │                                │
+│                  │                 │                                │
+│                  │  User Mgmt      │                                │
+│                  │  Content Edit   │                                │
+│                  │  Full Control   │                                │
+│                  └─────────────────┘                                │
+│                           │                                         │
+│          ┌────────────────┴────────────────┐                        │
+│          ▼                                 ▼                        │
+│   ┌─────────────┐                  ┌──────────────┐                 │
+│   │  Firebase   │                  │ Google Drive │                 │
+│   │  Firestore  │                  │  (Documents) │                 │
+│   │  Auth       │                  │              │                 │
+│   └─────────────┘                  └──────────────┘                 │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Naming Options
+- **IM Global Portal** (simple, clear)
+- **IM Global Hub** (implies central resource)
+- **IM Global Connect** (emphasizes relationship aspect)
+
+---
+
+## 2. User Roles & Access Hierarchy
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        ACCESS HIERARCHY                             │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ADMIN (You & Melda)                                                │
+│  ████████████████████████████████████████████████████████████  100% │
+│  • Full system access                                               │
+│  • Create/modify all users                                          │
+│  • Edit all content (EN/TR)                                         │
+│  • View all data                                                    │
+│                                                                     │
+│  AGENT                                                              │
+│  ████████████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░   40% │
+│  • Own profile & settings                                           │
+│  • Referred clients list (read-only except notes)                   │
+│  • Payment history (read-only)                                      │
+│  • Agent resources & opportunities                                  │
+│                                                                     │
+│  CLIENT                                                             │
+│  ████████████████████████████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░   40% │
+│  • Own profile & settings                                           │
+│  • Their documents/agreements                                       │
+│  • Their team contacts                                              │
+│  • Their opportunities & discussions                                │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Key Principle: Data Isolation
+- **Agents cannot see other agents' data**
+- **Clients cannot see other clients' data**
+- **Only Admins have cross-user visibility**
+
+---
+
+## 3. Portal Feature Breakdown
+
+### 3.1 Agent Portal Features
+
+| Feature | Description | Data Source |
+|---------|-------------|-------------|
+| **Dashboard** | Overview of referred clients, pending payments | Firestore |
+| **My Referrals** | List of clients with status (Active/Consulting Paid/Sale Closed) | Firestore |
+| **Payment History** | Two-tier tracking: Consulting Fee + Sale Commission | Firestore |
+| **Resources** | Agent presentation, agreements, marketing materials | Google Drive |
+| **Opportunities** | Current properties/deals to pitch to prospects | Firestore + Drive |
+| **Messages/Notes** | Communication thread with IM Global per client | Firestore |
+
+### 3.2 Client Portal Features
+
+| Feature | Description | Data Source |
+|---------|-------------|-------------|
+| **Dashboard** | Journey progress, active opportunities, recent activity | Firestore |
+| **My Team** | Contacts: Attorney, CPA, Lender, Banker + their info | Firestore |
+| **Documents** | Agreements, contracts, transaction files (organized by deal) | Google Drive |
+| **Opportunities** | Properties under review with notes/discussion | Firestore + Drive |
+| **My Journey** | Timeline/progress tracker of client relationship | Firestore |
+
+### 3.3 Admin Dashboard Features
+
+| Feature | Description |
+|---------|-------------|
+| **User Management** | Create agents/clients, set passwords, manage access |
+| **Content Editor** | Edit public site content (EN/TR), agent/client static content |
+| **Agent Overview** | View all agents, their referrals, payments owed |
+| **Client Overview** | View all clients, their status, team assignments |
+| **Document Management** | Upload/organize shared resources |
+| **Opportunity Manager** | Create/edit opportunities visible to agents/clients |
+
+---
+
+## 4. Two-Tier Referral Payment Structure
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    AGENT REFERRAL PAYMENT FLOW                      │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   AGENT refers CLIENT                                               │
+│        │                                                            │
+│        ▼                                                            │
+│   ┌─────────────────┐                                               │
+│   │  CLIENT JOINS   │────────────────────────────────────┐          │
+│   │  (Status: New)  │                                    │          │
+│   └────────┬────────┘                                    │          │
+│            │                                             │          │
+│            ▼                                             │          │
+│   ┌─────────────────┐      ┌─────────────────────┐       │          │
+│   │ CONSULTING FEE  │─────▶│ PAYMENT TIER 1      │       │          │
+│   │ PAID BY CLIENT  │      │ (Referral Fee)      │       │          │
+│   │ (Status: Active)│      │ Paid to Agent       │       │          │
+│   └────────┬────────┘      └─────────────────────┘       │          │
+│            │                                             │          │
+│            ▼                                             │          │
+│   ┌─────────────────┐      ┌─────────────────────┐       │          │
+│   │ REAL ESTATE     │─────▶│ PAYMENT TIER 2      │       │          │
+│   │ SALE CLOSES     │      │ (Commission Split)  │       │          │
+│   │ (Status: Closed)│      │ Paid to Agent       │       │          │
+│   └─────────────────┘      └─────────────────────┘       │          │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+**Tracking Fields per Referred Client:**
+- `status`: "new" | "consulting_active" | "sale_pending" | "sale_closed"
+- `consultingFeePaid`: boolean + date
+- `tier1PaymentPaid`: boolean + date + amount
+- `saleCloseDate`: date (nullable)
+- `tier2PaymentPaid`: boolean + date + amount
+
+---
+
+## 5. Technology Stack Recommendation
+
+### Why Firebase Makes Sense For You
+
+| Consideration | Firebase Advantage |
+|---------------|-------------------|
+| **Familiarity** | You've used it before |
+| **Scale** | 10s-100s users is well within free tier |
+| **Auth Built-in** | Email/password + Google login ready to go |
+| **Real-time** | Automatic data sync (future-proofs for mobile) |
+| **Costs** | Free tier covers your expected usage |
+| **Hosting** | Can host the whole app (or stay on Vercel) |
+
+### Hybrid Approach: Firebase + Google Drive
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                     DATA STORAGE STRATEGY                           │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   FIREBASE FIRESTORE (Text/Structured Data)                         │
+│   ─────────────────────────────────────────                         │
+│   • User profiles & authentication                                  │
+│   • Client/Agent status & metadata                                  │
+│   • Payment records                                                 │
+│   • Notes/comments/discussions                                      │
+│   • Opportunity listings (text content)                             │
+│   • Team assignments & contact info                                 │
+│   • Activity logs                                                   │
+│                                                                     │
+│   GOOGLE DRIVE (Files/Documents)                                    │
+│   ─────────────────────────────────                                 │
+│   • PDF contracts & agreements                                      │
+│   • Property photos & videos                                        │
+│   • Presentation materials                                          │
+│   • Large file attachments                                          │
+│                                                                     │
+│   WHY THIS SPLIT?                                                   │
+│   • Firebase free tier: 1GB storage, 10GB/month bandwidth           │
+│   • Google Drive: 15GB free, easy file previews/downloads           │
+│   • Drive handles large media better                                │
+│   • Firestore handles queries/relationships better                  │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Full Tech Stack
+
+| Layer | Technology | Why |
+|-------|------------|-----|
+| **Frontend** | React or Next.js | Modern, maintainable, good ecosystem |
+| **Auth** | Firebase Auth | Email/password + Google, simple setup |
+| **Database** | Firebase Firestore | NoSQL, real-time, scales naturally |
+| **File Storage** | Google Drive API | Large files, previews, your familiarity |
+| **Hosting** | Vercel (current) or Firebase Hosting | Both work well |
+| **Styling** | Your current CSS + component library | Keep consistent with public site |
+
+---
+
+## 6. Data Model (Firestore Collections)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    FIRESTORE COLLECTION STRUCTURE                   │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  users/                                                             │
+│  ├── {userId}                                                       │
+│  │   ├── email: string                                              │
+│  │   ├── role: "admin" | "agent" | "client"                         │
+│  │   ├── displayName: string                                        │
+│  │   ├── phone: string                                              │
+│  │   ├── createdAt: timestamp                                       │
+│  │   ├── lastLogin: timestamp                                       │
+│  │   └── referredBy: userId (for clients)                           │
+│  │                                                                  │
+│  agents/                                                            │
+│  ├── {agentId} (same as userId)                                     │
+│  │   ├── companyName: string                                        │
+│  │   ├── agreementSignedDate: timestamp                             │
+│  │   ├── agreementDriveLink: string                                 │
+│  │   └── notes: string (admin notes)                                │
+│  │                                                                  │
+│  clients/                                                           │
+│  ├── {clientId} (same as userId)                                    │
+│  │   ├── status: "new" | "consulting" | "active" | "closed"         │
+│  │   ├── consultingFeePaid: boolean                                 │
+│  │   ├── consultingFeeDate: timestamp                               │
+│  │   ├── referringAgentId: userId                                   │
+│  │   ├── driveRootFolder: string (their Drive folder link)          │
+│  │   └── notes: string                                              │
+│  │                                                                  │
+│  teamMembers/                                                       │
+│  ├── {memberId}                                                     │
+│  │   ├── clientId: userId                                           │
+│  │   ├── role: "attorney" | "cpa" | "lender" | "banker" | "other"   │
+│  │   ├── name: string                                               │
+│  │   ├── company: string                                            │
+│  │   ├── email: string                                              │
+│  │   └── phone: string                                              │
+│  │                                                                  │
+│  opportunities/                                                     │
+│  ├── {opportunityId}                                                │
+│  │   ├── title: string                                              │
+│  │   ├── description: string                                        │
+│  │   ├── propertyType: string                                       │
+│  │   ├── location: string                                           │
+│  │   ├── price: number                                              │
+│  │   ├── status: "available" | "under_review" | "closed"            │
+│  │   ├── visibleToAgents: boolean                                   │
+│  │   ├── assignedClients: [userId]                                  │
+│  │   ├── driveFolder: string                                        │
+│  │   └── createdAt: timestamp                                       │
+│  │                                                                  │
+│  discussions/                                                       │
+│  ├── {discussionId}                                                 │
+│  │   ├── opportunityId: string (or clientId for general)            │
+│  │   ├── clientId: userId                                           │
+│  │   ├── messages: [                                                │
+│  │   │   { authorId, content, timestamp }                           │
+│  │   │ ]                                                            │
+│  │   └── lastUpdated: timestamp                                     │
+│  │                                                                  │
+│  payments/                                                          │
+│  ├── {paymentId}                                                    │
+│  │   ├── agentId: userId                                            │
+│  │   ├── clientId: userId                                           │
+│  │   ├── type: "consulting_referral" | "sale_commission"            │
+│  │   ├── amount: number                                             │
+│  │   ├── status: "pending" | "paid"                                 │
+│  │   ├── paidDate: timestamp                                        │
+│  │   └── notes: string                                              │
+│  │                                                                  │
+│  siteContent/                                                       │
+│  ├── public_en                                                      │
+│  ├── public_tr                                                      │
+│  ├── agent_resources                                                │
+│  └── client_resources                                               │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 7. Security Model
+
+### Firestore Security Rules (Concept)
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                      SECURITY BOUNDARIES                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│   RULE: Users can only access their own data                        │
+│   ────────────────────────────────────────                          │
+│                                                                     │
+│   ADMIN                                                             │
+│   • READ: All collections                                           │
+│   • WRITE: All collections                                          │
+│                                                                     │
+│   AGENT                                                             │
+│   • READ: Own user profile                                          │
+│   • READ: Clients where referringAgentId == self                    │
+│   • READ: Payments where agentId == self                            │
+│   • READ: Opportunities where visibleToAgents == true               │
+│   • WRITE: Own profile (limited fields)                             │
+│   • WRITE: Discussions for own referred clients                     │
+│                                                                     │
+│   CLIENT                                                            │
+│   • READ: Own user profile                                          │
+│   • READ: Own client record                                         │
+│   • READ: Team members where clientId == self                       │
+│   • READ: Opportunities where assignedClients contains self         │
+│   • READ: Discussions where clientId == self                        │
+│   • WRITE: Own profile (limited fields)                             │
+│   • WRITE: Discussion messages (append only)                        │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 8. Implementation Phases (Proposed Roadmap)
+
+### Phase 1: Foundation (Week 1-2)
+- [ ] Set up Firebase project (Auth + Firestore)
+- [ ] Create authentication flow (login/logout/password reset)
+- [ ] Build basic role-based routing
+- [ ] Create admin user management interface
+- [ ] Deploy to staging environment
+
+### Phase 2: Agent Portal (Week 3-4)
+- [ ] Agent dashboard with referral list
+- [ ] Payment tracking view
+- [ ] Resources section (linked to Drive)
+- [ ] Basic opportunity viewing
+
+### Phase 3: Client Portal (Week 5-6)
+- [ ] Client dashboard with journey overview
+- [ ] Team contacts section
+- [ ] Document organization (Drive integration)
+- [ ] Opportunity review with discussion
+
+### Phase 4: Admin Dashboard (Week 7-8)
+- [ ] Full user management CRUD
+- [ ] Content management for public site
+- [ ] Opportunity creation/management
+- [ ] Reporting/overview dashboards
+
+### Phase 5: Integration & Polish (Week 9-10)
+- [ ] Google Drive API integration
+- [ ] Notification system (optional)
+- [ ] Mobile responsiveness pass
+- [ ] Testing and bug fixes
+- [ ] Production deployment
+
+---
+
+## 9. Open Questions for Discussion
+
+**Questions to Consider Before Proceeding:**
+
+1. **URL Structure**: Should portals be at:
+   - Subdomains? (`agent.imglobalinc.com`, `client.imglobalinc.com`)
+   - Paths? (`imglobalinc.com/agent`, `imglobalinc.com/client`)
+   - Separate apps? (Less recommended for your scale)
+
+2. **Notifications**: Do you want email notifications when:
+   - New client is assigned to agent?
+   - New message in discussion?
+   - Payment is marked as paid?
+
+3. **Client Journey Stages**: What are the exact stages you track? Example:
+   - Initial Consultation → Agreement Signed → Fee Paid → Team Assembled → Opportunity Search → Offer Phase → Under Contract → Closed
+
+4. **Branding Consistency**: Should portals have the same visual style as public site (gold foil, luxury feel), or a more utilitarian dashboard style?
+
+5. **Multi-language**: Should Agent/Client portals also support Turkish, or English-only?
+
+---
+
+## 10. Next Steps
+
+Once we align on this PRD, I will create a **Technical Design Document (TDD)** that includes:
+- Detailed component architecture
+- API endpoint specifications
+- Exact Firestore security rules
+- Google Drive folder structure
+- Step-by-step implementation guide
+
+---
+Document Created: 2026-02-09
+Version: Draft v1
