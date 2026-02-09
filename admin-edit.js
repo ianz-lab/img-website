@@ -102,20 +102,23 @@
 
     function addEditButtons() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
-            // Skip if already has edit button
+            const key = el.getAttribute('data-i18n');
+
+            // Skip if already has an edit button (check both inside and next sibling)
             if (el.querySelector('.admin-edit-btn')) return;
+            if (el.nextElementSibling && el.nextElementSibling.classList.contains('admin-edit-btn')) return;
 
             // Create edit button
             const btn = document.createElement('button');
             btn.className = 'admin-edit-btn';
             btn.innerHTML = '&#9999;&#65039;';
             btn.title = 'Edit this text';
-            btn.setAttribute('data-edit-key', el.getAttribute('data-i18n'));
+            btn.setAttribute('data-edit-key', key);
 
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                openEditModal(el.getAttribute('data-i18n'), el);
+                openEditModal(key, el);
             });
 
             // Insert button after the element or inside it
@@ -129,7 +132,7 @@
             }
 
             // Mark if has pending changes
-            if (pendingChanges[el.getAttribute('data-i18n')]) {
+            if (pendingChanges[key]) {
                 el.classList.add('admin-changed');
             }
         });
@@ -287,12 +290,23 @@
         pendingChanges[key] = { en: enText, tr: trText };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(pendingChanges));
 
+        // Remove ALL existing edit buttons for this element (siblings and children)
+        // Check siblings first
+        var sibling = element.nextElementSibling;
+        while (sibling && sibling.classList.contains('admin-edit-btn')) {
+            var next = sibling.nextElementSibling;
+            sibling.remove();
+            sibling = next;
+        }
+        // Also remove any inside the element
+        element.querySelectorAll('.admin-edit-btn').forEach(function (b) { b.remove(); });
+
         // Update the displayed text based on current language
-        const currentLang = document.documentElement.lang || 'en';
+        var currentLang = document.documentElement.lang || 'en';
         element.textContent = currentLang === 'en' ? enText : trText;
 
-        // Re-add edit button (since we replaced textContent)
-        const btn = document.createElement('button');
+        // Add exactly one edit button
+        var btn = document.createElement('button');
         btn.className = 'admin-edit-btn';
         btn.innerHTML = '&#9999;&#65039;';
         btn.title = 'Edit this text';
