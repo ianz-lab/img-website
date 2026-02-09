@@ -499,11 +499,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentLang = localStorage.getItem('imglobal-lang') || 'en';
 
-    // Initialize language on page load
-    if (currentLang === 'tr') {
-        applyTranslations('tr');
-        updateLangToggleUI('tr');
-    }
+    // Initialize language on page load - always apply to pick up any text changes
+    applyTranslations(currentLang);
+    updateLangToggleUI(currentLang);
 
     // Language toggle click handler
     langToggle.addEventListener('click', function () {
