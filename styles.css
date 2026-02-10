@@ -189,7 +189,7 @@ body {
 .nav-menu {
     display: flex;
     align-items: center;
-    gap: 40px;
+    gap: 32px;
     list-style: none;
 }
 
@@ -226,6 +226,7 @@ body {
     color: #000 !important;
     padding: 10px 24px;
     border-radius: 4px;
+    white-space: nowrap;
 }
 
 .nav-cta::after {
@@ -1033,29 +1034,7 @@ body {
         --section-padding: 80px;
     }
 
-    .stats-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 24px;
-    }
-
-    .investments-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .why-us-grid {
-        gap: 48px;
-    }
-
-    .contact-grid {
-        gap: 48px;
-    }
-}
-
-@media (max-width: 768px) {
-    :root {
-        --section-padding: 60px;
-    }
-
+    /* Nav collapses to hamburger at this breakpoint */
     .nav-menu {
         position: fixed;
         top: 0;
@@ -1089,6 +1068,34 @@ body {
 
     .nav-toggle.active span:nth-child(3) {
         transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    .nav-cta {
+        text-align: center;
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+    }
+
+    .investments-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .why-us-grid {
+        gap: 48px;
+    }
+
+    .contact-grid {
+        gap: 48px;
+    }
+}
+
+@media (max-width: 768px) {
+    :root {
+        --section-padding: 60px;
     }
 
     .hero-title {
