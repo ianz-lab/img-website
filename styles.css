@@ -753,8 +753,10 @@ body {
 }
 
 .photo-ian {
-    object-position: center 5%;
-    transform: scale(1.3);
+    width: 130%;
+    height: 130%;
+    margin: -15% 0 0 -15%;
+    object-position: center 15%;
 }
 
 .photo-saime {
