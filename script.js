@@ -266,14 +266,15 @@ document.addEventListener('DOMContentLoaded', function () {
             'stats.subtitle': 'The United States remains one of the most secure and profitable real estate markets in the world, offering stability, transparency, and long-term growth that few countries can match.',
             'stats.trillion': 'Trillion',
             'stats.billion': 'Billion',
+            'stats.rent': 'Rent',
             'stats.marketValue': 'Overall U.S. Real Estate Market Value',
             'stats.intlPurchases': 'International Purchases Each Year',
             'stats.renters': 'of U.S. Households Rent Their Homes',
 
             // Why Us
             'whyUs.titlePre': 'Why Choose ',
-            'whyUs.intro1': 'Because we do more than transact; we build relationships. Every client is treated as a partner. We listen first; your goals, concerns, vision, then tailor the path.',
-            'whyUs.intro2': 'With deep roots in Southern California and access to 500+ offices nationwide, we navigate cultural, legal, and financial bridges so you don\'t have to.',
+            'whyUs.intro1': 'We do more than transact; we build relationships. Every client is treated as a partner. We listen first; your goals, concerns, vision, then tailor the path.',
+            'whyUs.intro2': 'With deep roots in Southern California and access to 500+ offices nationwide, we bridge cultural, legal, and financial complexities so you don’t have to navigate them alone.',
             'whyUs.feature1Title': 'Global Reach + Local Expertise',
             'whyUs.feature1Text': 'Backed by Realty ONE Group\'s 500+ offices worldwide, but locally rooted in Southern California. We connect global investors to U.S. real estate opportunities with insight into both cultural and financial considerations.',
             'whyUs.feature1Expanded': 'We are more than agents, we\'re your partners through every stage of U.S. real estate ownership. Our investor services are designed to provide international buyers with a seamless U.S. real estate experience. We don\'t just manage transactions; we guide people. Every client\'s story is unique, and we take the time to understand your goals, concerns, and vision before mapping out the right path forward.',
@@ -379,8 +380,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Hero
             'hero.badge': 'Kaliforniya Gayrimenkul Yatırımı',
-            'hero.titleLine1': 'Amerika\'da Gayrimenkul',
-            'hero.titleLine2': 'Yatırımınıza Köprü',
+            'hero.titleLine1': 'Amerika\'da Gayrimenkul Yatırımlarına',
+            'hero.titleLine2': 'Açılan Stratejik Yolunuz',
             'hero.subtitle': 'Uluslararası yatırımcılara yalnızca fırsatlar sunmakla kalmıyor; ABD’deki yatırımlarının planlama, uygulama ve büyüme aşamalarının tamamında rehberlik ediyoruz.',
             'hero.cta1': 'Yolculuğunuza Başlayın',
             'hero.cta2': 'Daha Fazlasını Öğrenin',
@@ -392,14 +393,15 @@ document.addEventListener('DOMContentLoaded', function () {
             'stats.subtitle': 'Amerika Birleşik Devletleri, dünyanın en güvenli ve en kârlı gayrimenkul pazarlarından biri olmaya devam ediyor — çok az ülkenin sunabileceği istikrar, şeffaflık ve uzun vadeli büyüme potansiyeli sunuyor.',
             'stats.trillion': 'Trilyon',
             'stats.billion': 'Milyar',
+            'stats.rent': 'Kira',
             'stats.marketValue': 'Toplam ABD Gayrimenkul Piyasa Değeri',
             'stats.intlPurchases': 'Yıllık Uluslararası Alımlar',
             'stats.renters': 'ABD Hanelerinin Kiracı Oranı',
 
             // Why Us
             'whyUs.titlePre': 'Neden ',
-            'whyUs.intro1': 'Çünkü biz sadece alım-satım yapmıyoruz; kalıcı ilişkiler kuruyoruz. Her müşterimize bir iş ortağı gözüyle bakıyoruz. Önce sizi dinliyoruz — hedeflerinizi, endişelerinizi, hayallerinizi — sonra da size özel bir yol çiziyoruz.',
-            'whyUs.intro2': 'Güney Kaliforniya\'daki derin köklerimiz ve ülke genelinde 500\'den fazla ofise erişimimizle, kültürel, hukuki ve finansal tüm köprüleri sizin adınıza aşıyoruz.',
+            'whyUs.intro1': 'Biz sadece alım-satım işlemleri yapmıyoruz; kalıcı ilişkiler kuruyoruz. Her müşterimize bir iş ortağı gözüyle bakıyoruz. Önce sizi dinliyoruz; hedeflerinizi, endişelerinizi, hayallerinizi sonra da size özel bir yol haritası çiziyoruz.',
+            'whyUs.intro2': 'Güney Kaliforniya’daki güçlü yerel bağlarımız ve ülke genelinde 500’den fazla ofise erişimimizle, kültürel, hukuki ve finansal karmaşıklıkları sizin yerinize yönetiyoruz; böylece bu süreci tek başınıza yürütmek zorunda kalmıyorsunuz.',
             'whyUs.feature1Title': 'Küresel Erişim + Yerel Deneyim',
             'whyUs.feature1Text': 'Realty ONE Group\'un dünya genelindeki 500\'den fazla ofisiyle destekleniyoruz, ama kalbimiz Güney Kaliforniya\'da atıyor. Küresel yatırımcıları hem kültürel hem de finansal dinamikleri anlayarak ABD fırsatlarıyla buluşturuyoruz.',
             'whyUs.feature1Expanded': 'Biz sıradan emlak danışmanları değiliz — ABD gayrimenkul yolculuğunuzun her aşamasında yanınızda olan ortaklarınızız. Hizmetlerimiz, uluslararası alıcılara kusursuz bir deneyim sunmak için tasarlandı. Sadece işlem yönetmiyoruz; insanlara yol gösteriyoruz. Her müşterinin hikâyesi farklı ve doğru yolu çizmeden önce hedeflerinizi, kaygılarınızı ve vizyonunuzu anlamak için gereken zamanı ayırıyoruz.',
