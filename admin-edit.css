@@ -144,6 +144,11 @@ body.admin-mode-collapsed {
 }
 
 /* Edit buttons next to translatable elements */
+.admin-edit-wrapper {
+    display: inline;
+    position: relative;
+}
+
 .admin-edit-btn {
     display: inline-flex;
     align-items: center;

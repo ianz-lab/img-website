@@ -102,6 +102,7 @@
 
     // ============================================================
     // Helper: check if a key should use innerHTML (contains HTML)
+    // Matches the same logic used in script.js applyTranslations()
     // ============================================================
     function keyUsesHTML(key) {
         return key.includes('Item');
@@ -122,15 +123,21 @@
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
 
-            // Skip if already has an edit button (check both inside and next sibling)
+            // Skip if already has an edit button
             if (el.querySelector('.admin-edit-btn')) return;
             if (el.nextElementSibling && el.nextElementSibling.classList.contains('admin-edit-btn')) return;
+
+            // Wrap the element + button in an inline wrapper to avoid
+            // injecting extra children into flex/grid containers
+            const wrapper = document.createElement('span');
+            wrapper.className = 'admin-edit-wrapper';
+            wrapper.style.cssText = 'position:relative;display:inline;';
 
             // Create edit button
             const btn = document.createElement('button');
             btn.className = 'admin-edit-btn';
             btn.innerHTML = '&#9999;&#65039;';
-            btn.title = 'Edit this text';
+            btn.title = 'Edit: ' + key;
             btn.setAttribute('data-edit-key', key);
 
             btn.addEventListener('click', function (e) {
@@ -139,9 +146,10 @@
                 openEditModal(key, el);
             });
 
-            // Insert button after the element without breaking layout
-            // Do NOT force display:inline on the element — just place the button after it
-            el.insertAdjacentElement('afterend', btn);
+            // Insert the wrapper around the element, then append button
+            el.parentNode.insertBefore(wrapper, el);
+            wrapper.appendChild(el);
+            wrapper.appendChild(btn);
 
             // Mark if has pending changes
             if (pendingChanges[key]) {
@@ -388,13 +396,13 @@
                         <label class="admin-field-label">
                             <span class="admin-field-flag">&#127482;&#127480;</span> English
                         </label>
-                        <textarea class="admin-field-input" id="editEnglish" placeholder="Enter English text...">${escapeHtml(enValue)}</textarea>
+                        <textarea class="admin-field-input" id="editEnglish" placeholder="Enter English text..."></textarea>
                     </div>
                     <div class="admin-field">
                         <label class="admin-field-label">
                             <span class="admin-field-flag">&#127481;&#127479;</span> T&uuml;rk&ccedil;e
                         </label>
-                        <textarea class="admin-field-input" id="editTurkish" placeholder="T&uuml;rk&ccedil;e metni girin...">${escapeHtml(trValue)}</textarea>
+                        <textarea class="admin-field-input" id="editTurkish" placeholder="T&uuml;rk&ccedil;e metni girin..."></textarea>
                     </div>
                 </div>
                 <div class="admin-modal-footer">
@@ -406,42 +414,52 @@
 
         document.body.appendChild(overlay);
 
+        // Set textarea values via DOM property — NOT innerHTML/template string.
+        // This avoids double-encoding HTML entities and ensures raw HTML tags
+        // like <strong> and special characters display correctly.
+        var enTextarea = overlay.querySelector('#editEnglish');
+        var trTextarea = overlay.querySelector('#editTurkish');
+        enTextarea.value = enValue;
+        trTextarea.value = trValue;
+
         // Focus first field
         setTimeout(() => {
-            document.getElementById('editEnglish').focus();
+            enTextarea.focus();
         }, 100);
 
-        // Event listeners
-        overlay.querySelector('.admin-modal-close').addEventListener('click', () => {
+        // Shared cleanup function to remove overlay + listeners
+        function closeModal() {
             overlay.remove();
-        });
+            document.removeEventListener('keydown', escHandler);
+        }
 
-        overlay.querySelector('.admin-modal-btn-cancel').addEventListener('click', () => {
-            overlay.remove();
-        });
+        // Event listeners
+        overlay.querySelector('.admin-modal-close').addEventListener('click', closeModal);
+
+        overlay.querySelector('.admin-modal-btn-cancel').addEventListener('click', closeModal);
 
         overlay.querySelector('.admin-modal-btn-save').addEventListener('click', () => {
-            const enText = document.getElementById('editEnglish').value;
-            const trText = document.getElementById('editTurkish').value;
+            const enText = enTextarea.value;
+            const trText = trTextarea.value;
 
             saveChange(key, enText, trText, element);
-            overlay.remove();
+            closeModal();
         });
 
         // Close on overlay click
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
-                overlay.remove();
+                closeModal();
             }
         });
 
-        // Close on Escape key
-        document.addEventListener('keydown', function escHandler(e) {
+        // Close on Escape key — single handler, always cleaned up
+        function escHandler(e) {
             if (e.key === 'Escape') {
-                overlay.remove();
-                document.removeEventListener('keydown', escHandler);
+                closeModal();
             }
-        });
+        }
+        document.addEventListener('keydown', escHandler);
     }
 
     function saveChange(key, enText, trText, element) {
@@ -449,33 +467,17 @@
         pendingChanges[key] = { en: enText, tr: trText };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(pendingChanges));
 
-        // Remove ALL existing edit buttons for this element (siblings and children)
-        // Check siblings first
-        var sibling = element.nextElementSibling;
-        while (sibling && sibling.classList.contains('admin-edit-btn')) {
-            var next = sibling.nextElementSibling;
-            sibling.remove();
-            sibling = next;
-        }
-        // Also remove any inside the element
-        element.querySelectorAll('.admin-edit-btn').forEach(function (b) { b.remove(); });
-
         // Update the displayed text based on current language
-        // Use innerHTML for keys that contain HTML (e.g. Item keys with <strong>)
         var currentLang = document.documentElement.lang || 'en';
         setElementText(element, key, currentLang === 'en' ? enText : trText);
 
-        // Add exactly one edit button
-        var btn = document.createElement('button');
-        btn.className = 'admin-edit-btn';
-        btn.innerHTML = '&#9999;&#65039;';
-        btn.title = 'Edit this text';
-        btn.addEventListener('click', function (e) {
-            e.preventDefault();
-            e.stopPropagation();
-            openEditModal(key, element);
+        // Also update ALL other elements with the same key (e.g. readMore, nav links in footer)
+        document.querySelectorAll('[data-i18n="' + key + '"]').forEach(function (el) {
+            if (el !== element) {
+                setElementText(el, key, currentLang === 'en' ? enText : trText);
+                el.classList.add('admin-changed');
+            }
         });
-        element.insertAdjacentElement('afterend', btn);
 
         // Mark as changed
         element.classList.add('admin-changed');
@@ -489,13 +491,16 @@
 
         Object.keys(pendingChanges).forEach(key => {
             const change = pendingChanges[key];
-            const element = document.querySelector('[data-i18n="' + key + '"]');
+            // Use querySelectorAll to update ALL elements with this key
+            // (e.g., nav links duplicated in footer, common.readMore on multiple buttons)
+            const elements = document.querySelectorAll('[data-i18n="' + key + '"]');
 
-            if (element && change[currentLang]) {
-                // Use innerHTML for keys that contain HTML (e.g. Item keys)
-                setElementText(element, key, change[currentLang]);
-                element.classList.add('admin-changed');
-            }
+            elements.forEach(function (element) {
+                if (change[currentLang]) {
+                    setElementText(element, key, change[currentLang]);
+                    element.classList.add('admin-changed');
+                }
+            });
         });
     }
 
@@ -608,12 +613,16 @@
                 var trBlock = sections.trBlock;
 
                 // Replace a key's value within a specific section block
-                function replaceKeyInBlock(block, key, newValue) {
+                var missingKeys = [];
+                function replaceKeyInBlock(block, key, newValue, langLabel) {
                     var escaped = escapeForJS(newValue);
                     var k = escapeRegex(key);
                     var keyRegex = new RegExp("['\"]" + k + "['\"]:\\s*'");
                     var m = block.match(keyRegex);
-                    if (!m) return block;
+                    if (!m) {
+                        missingKeys.push(langLabel + ': ' + key);
+                        return block;
+                    }
 
                     var start = block.indexOf(m[0]) + m[0].length;
                     // Use the same brace-aware string walker to find end of value
@@ -633,10 +642,10 @@
                     var key = keys[idx];
                     var change = pendingChanges[key];
                     if (change.en) {
-                        enBlock = replaceKeyInBlock(enBlock, key, change.en);
+                        enBlock = replaceKeyInBlock(enBlock, key, change.en, 'EN');
                     }
                     if (change.tr) {
-                        trBlock = replaceKeyInBlock(trBlock, key, change.tr);
+                        trBlock = replaceKeyInBlock(trBlock, key, change.tr, 'TR');
                     }
                 }
 
@@ -653,7 +662,11 @@
                 // Download
                 downloadFile('script.js', updatedScript);
 
-                alert('script.js downloaded!\n\nNext steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)');
+                var msg = 'script.js downloaded!\n\nNext steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
+                if (missingKeys.length > 0) {
+                    msg += '\n\n⚠️ Warning: The following keys were not found in the source file and their changes were NOT included:\n' + missingKeys.join('\n');
+                }
+                alert(msg);
             })
             .catch(function (error) {
                 console.error('Error exporting:', error);
