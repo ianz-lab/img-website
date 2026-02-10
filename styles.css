@@ -749,6 +749,7 @@ body {
 /* Individual photo adjustments to center faces */
 .photo-melda {
     object-position: center 18%;
+    filter: brightness(0.85) contrast(1.1);
 }
 
 .photo-ian {
