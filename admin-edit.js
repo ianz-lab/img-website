@@ -100,6 +100,24 @@
         });
     }
 
+    // ============================================================
+    // Helper: check if a key should use innerHTML (contains HTML)
+    // ============================================================
+    function keyUsesHTML(key) {
+        return key.includes('Item');
+    }
+
+    // ============================================================
+    // Helper: set element text respecting HTML vs plain text keys
+    // ============================================================
+    function setElementText(el, key, text) {
+        if (keyUsesHTML(key)) {
+            el.innerHTML = text;
+        } else {
+            el.textContent = text;
+        }
+    }
+
     function addEditButtons() {
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
@@ -121,15 +139,9 @@
                 openEditModal(key, el);
             });
 
-            // Insert button after the element or inside it
-            if (el.tagName === 'P' || el.tagName === 'SPAN' || el.tagName === 'H1' ||
-                el.tagName === 'H2' || el.tagName === 'H3' || el.tagName === 'H4' ||
-                el.tagName === 'LI' || el.tagName === 'A' || el.tagName === 'DIV') {
-                el.style.display = 'inline';
-                el.insertAdjacentElement('afterend', btn);
-            } else {
-                el.appendChild(btn);
-            }
+            // Insert button after the element without breaking layout
+            // Do NOT force display:inline on the element — just place the button after it
+            el.insertAdjacentElement('afterend', btn);
 
             // Mark if has pending changes
             if (pendingChanges[key]) {
@@ -138,19 +150,170 @@
         });
     }
 
-    // Helper: walk through a string to extract a quoted value, handling escaped quotes
+    // ============================================================
+    // Brace-counting parser to extract EN and TR sections from
+    // script.js. This replaces the fragile regex approach.
+    // ============================================================
+
+    /**
+     * Find the matching closing brace for an opening brace at `startIdx`.
+     * Handles nested braces and skips content inside single-quoted strings.
+     * Returns the index of the matching `}`.
+     */
+    function findMatchingBrace(text, startIdx) {
+        var depth = 0;
+        var inString = false;
+        var escaped = false;
+
+        for (var i = startIdx; i < text.length; i++) {
+            var ch = text[i];
+
+            if (escaped) {
+                escaped = false;
+                continue;
+            }
+
+            if (ch === '\\') {
+                if (inString) {
+                    escaped = true;
+                }
+                continue;
+            }
+
+            if (ch === "'") {
+                inString = !inString;
+                continue;
+            }
+
+            if (inString) continue;
+
+            if (ch === '{') {
+                depth++;
+            } else if (ch === '}') {
+                depth--;
+                if (depth === 0) {
+                    return i;
+                }
+            }
+        }
+        return -1; // no match found
+    }
+
+    /**
+     * Parse the translations object in script.js and return the positions
+     * of the EN and TR sections.
+     *
+     * Returns an object with:
+     *   beforeEn: everything up to and including "en: {"
+     *   enBlock:  the contents inside en: { ... }
+     *   middle:   everything from the closing "}" of en to and including "tr: {"
+     *   trBlock:  the contents inside tr: { ... }
+     *   closing:  the closing "}  };" of the translations object
+     *   afterAll: everything after the translations object
+     *
+     * Returns null if parsing fails.
+     */
+    function parseTranslationSections(scriptContent) {
+        // Find "translations = {" or "translations={" etc.
+        var translationsStart = scriptContent.search(/translations\s*=\s*\{/);
+        if (translationsStart === -1) return null;
+
+        // Find the opening brace of the translations object
+        var translationsOpenBrace = scriptContent.indexOf('{', translationsStart);
+        if (translationsOpenBrace === -1) return null;
+
+        // Find "en:" inside the translations object
+        var enKeyMatch = scriptContent.substring(translationsOpenBrace).match(/\ben\s*:\s*\{/);
+        if (!enKeyMatch) return null;
+
+        var enOpenBraceRelative = scriptContent.substring(translationsOpenBrace).indexOf('{', enKeyMatch.index);
+        var enOpenBrace = translationsOpenBrace + enOpenBraceRelative;
+
+        // Use brace counting to find the end of the EN block
+        var enCloseBrace = findMatchingBrace(scriptContent, enOpenBrace);
+        if (enCloseBrace === -1) return null;
+
+        // Find "tr:" after the EN block
+        var afterEn = scriptContent.substring(enCloseBrace);
+        var trKeyMatch = afterEn.match(/\btr\s*:\s*\{/);
+        if (!trKeyMatch) return null;
+
+        var trOpenBraceRelative = afterEn.indexOf('{', trKeyMatch.index);
+        var trOpenBrace = enCloseBrace + trOpenBraceRelative;
+
+        // Use brace counting to find the end of the TR block
+        var trCloseBrace = findMatchingBrace(scriptContent, trOpenBrace);
+        if (trCloseBrace === -1) return null;
+
+        // Find the closing of the translations object "};"
+        var afterTr = scriptContent.substring(trCloseBrace + 1);
+        var closingMatch = afterTr.match(/\}\s*;/);
+        if (!closingMatch) return null;
+
+        var closingEndIdx = trCloseBrace + 1 + closingMatch.index + closingMatch[0].length;
+
+        return {
+            beforeEn: scriptContent.substring(0, enOpenBrace + 1),
+            enBlock: scriptContent.substring(enOpenBrace + 1, enCloseBrace),
+            middle: scriptContent.substring(enCloseBrace, trOpenBrace + 1),
+            trBlock: scriptContent.substring(trOpenBrace + 1, trCloseBrace),
+            closing: scriptContent.substring(trCloseBrace, closingEndIdx),
+            afterAll: scriptContent.substring(closingEndIdx)
+        };
+    }
+
+    // ============================================================
+    // Escape / Unescape helpers — symmetric roundtrip
+    // ============================================================
+
+    /**
+     * Walk through a string starting at `startIdx` to find the end of
+     * a single-quoted value, handling escaped characters.
+     * Returns the raw content between the quotes and the index of
+     * the closing quote.
+     */
     function extractQuotedValue(text, startIdx) {
-        let end = startIdx;
-        let esc = false;
-        for (let i = startIdx; i < text.length; i++) {
+        var end = startIdx;
+        var esc = false;
+        for (var i = startIdx; i < text.length; i++) {
             if (esc) { esc = false; continue; }
             if (text[i] === '\\') { esc = true; continue; }
             if (text[i] === "'") { end = i; break; }
         }
+        // Unescape: \' -> ', \\ -> \, \n -> newline
+        var raw = text.substring(startIdx, end);
+        var unescaped = '';
+        for (var j = 0; j < raw.length; j++) {
+            if (raw[j] === '\\' && j + 1 < raw.length) {
+                var next = raw[j + 1];
+                if (next === "'") { unescaped += "'"; j++; }
+                else if (next === '\\') { unescaped += '\\'; j++; }
+                else if (next === 'n') { unescaped += '\n'; j++; }
+                else { unescaped += raw[j]; } // keep unknown escapes as-is
+            } else {
+                unescaped += raw[j];
+            }
+        }
         return {
-            value: text.substring(startIdx, end).replace(/\\'/g, "'").replace(/\\n/g, '\n'),
+            value: unescaped,
             endIdx: end
         };
+    }
+
+    /**
+     * Escape a string for insertion into a single-quoted JS string literal.
+     * This is the inverse of what extractQuotedValue does.
+     */
+    function escapeForJS(str) {
+        var result = '';
+        for (var i = 0; i < str.length; i++) {
+            var ch = str[i];
+            if (ch === '\\') { result += '\\\\'; }
+            else if (ch === "'") { result += "\\'"; }
+            else if (ch === '\n') { result += '\\n'; }
+            else { result += ch; }
+        }
+        return result;
     }
 
     // Helper: extract a translation value for a key from a section of script.js
@@ -173,16 +336,12 @@
             fetch('script.js')
                 .then(response => response.text())
                 .then(scriptContent => {
-                    // Parse out EN and TR sections
-                    var enSectionMatch = scriptContent.match(/translations\s*=\s*\{[\s\S]*?en:\s*\{([\s\S]*?)\},\s*tr:/);
-                    var trSectionMatch = scriptContent.match(/tr:\s*\{([\s\S]*?)\}\s*\};/);
+                    // Use brace-counting parser instead of regex
+                    var sections = parseTranslationSections(scriptContent);
 
-                    if (enSectionMatch && enSectionMatch[1]) {
-                        enValue = extractValueFromSection(enSectionMatch[1], key);
-                    }
-
-                    if (trSectionMatch && trSectionMatch[1]) {
-                        trValue = extractValueFromSection(trSectionMatch[1], key);
+                    if (sections) {
+                        enValue = extractValueFromSection(sections.enBlock, key);
+                        trValue = extractValueFromSection(sections.trBlock, key);
                     }
 
                     // Override with pending changes if they exist
@@ -302,8 +461,9 @@
         element.querySelectorAll('.admin-edit-btn').forEach(function (b) { b.remove(); });
 
         // Update the displayed text based on current language
+        // Use innerHTML for keys that contain HTML (e.g. Item keys with <strong>)
         var currentLang = document.documentElement.lang || 'en';
-        element.textContent = currentLang === 'en' ? enText : trText;
+        setElementText(element, key, currentLang === 'en' ? enText : trText);
 
         // Add exactly one edit button
         var btn = document.createElement('button');
@@ -332,7 +492,8 @@
             const element = document.querySelector('[data-i18n="' + key + '"]');
 
             if (element && change[currentLang]) {
-                element.textContent = change[currentLang];
+                // Use innerHTML for keys that contain HTML (e.g. Item keys)
+                setElementText(element, key, change[currentLang]);
                 element.classList.add('admin-changed');
             }
         });
@@ -424,7 +585,7 @@
     }
 
     // ============================================================
-    // EXPORT FUNCTION - handles EN and TR sections independently
+    // EXPORT FUNCTION - uses brace-counting parser for reliability
     // ============================================================
     function exportChanges() {
         if (Object.keys(pendingChanges).length === 0) {
@@ -435,30 +596,27 @@
         fetch('script.js')
             .then(function (response) { return response.text(); })
             .then(function (scriptContent) {
-                // Split the script into EN section and TR section using regex
-                var sectionMatch = scriptContent.match(/([\s\S]*?en:\s*\{)([\s\S]*?)(\},\s*tr:\s*\{)([\s\S]*?)(\}\s*\};)([\s\S]*)/);
+                // Use brace-counting parser instead of fragile regex
+                var sections = parseTranslationSections(scriptContent);
 
-                if (!sectionMatch) {
+                if (!sections) {
                     alert('Error: Could not parse translations structure in script.js');
                     return;
                 }
 
-                var beforeEn = sectionMatch[1];
-                var enBlock = sectionMatch[2];
-                var middle = sectionMatch[3];
-                var trBlock = sectionMatch[4];
-                var closing = sectionMatch[5];
-                var afterAll = sectionMatch[6];
+                var enBlock = sections.enBlock;
+                var trBlock = sections.trBlock;
 
                 // Replace a key's value within a specific section block
                 function replaceKeyInBlock(block, key, newValue) {
-                    var escaped = newValue.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, '\\n');
+                    var escaped = escapeForJS(newValue);
                     var k = escapeRegex(key);
                     var keyRegex = new RegExp("['\"]" + k + "['\"]:\\s*'");
                     var m = block.match(keyRegex);
                     if (!m) return block;
 
                     var start = block.indexOf(m[0]) + m[0].length;
+                    // Use the same brace-aware string walker to find end of value
                     var end = start;
                     var esc = false;
                     for (var i = start; i < block.length; i++) {
@@ -483,7 +641,7 @@
                 }
 
                 // Reassemble the full script
-                var updatedScript = beforeEn + enBlock + middle + trBlock + closing + afterAll;
+                var updatedScript = sections.beforeEn + enBlock + sections.middle + trBlock + sections.closing + sections.afterAll;
 
                 // Ensure the initialization fix is always preserved in exported files
                 // Replace old Turkish-only init with always-apply init
