@@ -419,7 +419,7 @@ body {
 }
 
 .stat-number {
-    font-family: 'Inter', var(--font-body);
+    font-family: var(--font-display);
     font-size: 3.5rem;
     font-weight: 300;
     color: var(--color-gold);
@@ -644,6 +644,7 @@ body {
     position: relative;
     z-index: 1;
     line-height: 1;
+    padding-bottom: 4px;
 }
 
 .step-content {
