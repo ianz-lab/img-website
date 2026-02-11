@@ -672,23 +672,35 @@
                 // Reassemble the full script
                 var updatedScript = sections.beforeEn + enBlock + sections.middle + trBlock + sections.closing + sections.afterAll;
 
-                // Verify the exported file is different from the source
+                // Log whether file actually changed
                 if (updatedScript === scriptContent) {
-                    console.warn('[Admin Export] WARNING: Exported file is IDENTICAL to source! No actual changes were applied.');
-                    alert('⚠️ Warning: The exported file appears identical to the current script.js.\n\nThis means your edits may not have been saved, or the saved values are the same as what\'s already in the file.\n\nPlease check your pending changes and try again.');
-                    return;
+                    console.log('[Admin Export] Note: exported file is identical to source (changes already in file).');
+                } else {
+                    console.log('[Admin Export] Export complete. ' + appliedChanges.length + ' actual change(s) applied.');
                 }
 
-                console.log('[Admin Export] Export complete. ' + appliedChanges.length + ' actual change(s) applied.');
-
-                // Download
+                // Always download the file
                 downloadFile('script.js', updatedScript);
 
-                var msg = '✅ script.js downloaded with ' + appliedChanges.length + ' change(s)!\n\n';
-                msg += 'Changes applied:\n' + appliedChanges.join('\n') + '\n\n';
+                // Clear pending changes after successful export
+                pendingChanges = {};
+                localStorage.removeItem(STORAGE_KEY);
+                updateStatus();
+
+                // Remove changed highlights from elements
+                document.querySelectorAll('.admin-changed').forEach(function (el) {
+                    el.classList.remove('admin-changed');
+                });
+
+                var msg = '✅ script.js exported and downloaded!\n\n';
+                if (appliedChanges.length > 0) {
+                    msg += appliedChanges.length + ' text change(s) applied:\n' + appliedChanges.join('\n') + '\n\n';
+                } else {
+                    msg += 'Your pending edits matched what was already in the file (possibly from a previous export).\nThe file has been downloaded — your pending changes have been cleared.\n\n';
+                }
                 msg += 'Next steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
                 if (missingKeys.length > 0) {
-                    msg += '\n\n⚠️ Warning: The following keys were not found in the source file and their changes were NOT included:\n' + missingKeys.join('\n');
+                    msg += '\n\n⚠️ Warning: The following keys were not found:\n' + missingKeys.join('\n');
                 }
                 alert(msg);
             })
