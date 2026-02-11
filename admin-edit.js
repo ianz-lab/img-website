@@ -611,7 +611,7 @@
     }
 
     // ============================================================
-    // EXPORT FUNCTION - uses brace-counting parser for reliability
+    // EXPORT FUNCTION — line-by-line block rewriting for reliability
     // ============================================================
     function exportChanges() {
         if (Object.keys(pendingChanges).length === 0) {
@@ -619,93 +619,121 @@
             return;
         }
 
-        // Log what we're about to export
-        console.log('[Admin Export] Pending changes to export:', JSON.stringify(pendingChanges, null, 2));
+        // First, download a backup of pending changes as JSON (safety net)
+        var backupJson = JSON.stringify(pendingChanges, null, 2);
+        downloadFile('pending-changes-backup.json', backupJson);
 
         fetch('script.js?t=' + Date.now())
             .then(function (response) { return response.text(); })
             .then(function (scriptContent) {
-                console.log('[Admin Export] Fetched script.js, length:', scriptContent.length);
-
-                // Use brace-counting parser instead of fragile regex
+                // Use brace-counting parser to split the file into sections
                 var sections = parseTranslationSections(scriptContent);
 
                 if (!sections) {
-                    alert('Error: Could not parse translations structure in script.js');
+                    alert('Error: Could not parse translations structure in script.js.\n\nYour changes have been saved as pending-changes-backup.json.');
                     return;
                 }
 
-                console.log('[Admin Export] Parsed sections successfully. EN block length:', sections.enBlock.length, 'TR block length:', sections.trBlock.length);
+                // --- Line-by-line rewriting approach ---
+                // Split each language block into individual lines,
+                // find lines containing keys we have changes for,
+                // and rebuild those lines with the new values.
 
-                var enBlock = sections.enBlock;
-                var trBlock = sections.trBlock;
-
-                // Replace a key's value within a specific section block
-                var missingKeys = [];
                 var appliedChanges = [];
-                function replaceKeyInBlock(block, key, newValue, langLabel) {
-                    var escaped = escapeForJS(newValue);
-                    var k = escapeRegex(key);
-                    var keyRegex = new RegExp("['\"]" + k + "['\"]:\\s*'");
-                    var m = block.match(keyRegex);
-                    if (!m) {
-                        missingKeys.push(langLabel + ': ' + key);
-                        console.warn('[Admin Export] Key NOT FOUND in ' + langLabel + ' block:', key);
-                        return block;
+                var missingKeys = [];
+
+                function rewriteBlock(block, lang) {
+                    var lines = block.split('\n');
+                    var changedKeys = {};
+
+                    // Build a lookup of keys we need to change for this language
+                    var keys = Object.keys(pendingChanges);
+                    for (var i = 0; i < keys.length; i++) {
+                        var change = pendingChanges[keys[i]];
+                        if (change[lang] !== undefined) {
+                            changedKeys[keys[i]] = change[lang];
+                        }
                     }
 
-                    var start = block.indexOf(m[0]) + m[0].length;
-                    // Use the same brace-aware string walker to find end of value
-                    var end = start;
-                    var esc = false;
-                    for (var i = start; i < block.length; i++) {
-                        if (esc) { esc = false; continue; }
-                        if (block[i] === '\\') { esc = true; continue; }
-                        if (block[i] === "'") { end = i; break; }
+                    // Process each line
+                    for (var lineIdx = 0; lineIdx < lines.length; lineIdx++) {
+                        var line = lines[lineIdx];
+
+                        // Check each pending key against this line
+                        var pendingKeysList = Object.keys(changedKeys);
+                        for (var k = 0; k < pendingKeysList.length; k++) {
+                            var key = pendingKeysList[k];
+
+                            // Check if this line contains the key (quoted with single or double quotes)
+                            if (line.indexOf("'" + key + "'") === -1 && line.indexOf('"' + key + '"') === -1) {
+                                continue;
+                            }
+
+                            // Found the key on this line — rebuild the line
+                            // Find where the value starts (after the key and colon and opening quote)
+                            var keyPatternSingle = "'" + key + "'";
+                            var keyPatternDouble = '"' + key + '"';
+                            var keyPos = line.indexOf(keyPatternSingle);
+                            var keyLen = keyPatternSingle.length;
+                            if (keyPos === -1) {
+                                keyPos = line.indexOf(keyPatternDouble);
+                                keyLen = keyPatternDouble.length;
+                            }
+
+                            // Find the colon and opening quote after the key
+                            var afterKey = line.substring(keyPos + keyLen);
+                            var colonQuoteMatch = afterKey.match(/:\s*'/);
+                            if (!colonQuoteMatch) continue;
+
+                            var valueStartInLine = keyPos + keyLen + colonQuoteMatch.index + colonQuoteMatch[0].length;
+
+                            // Walk forward to find the closing quote (handling escapes)
+                            var valueEndInLine = valueStartInLine;
+                            var esc = false;
+                            for (var ci = valueStartInLine; ci < line.length; ci++) {
+                                if (esc) { esc = false; continue; }
+                                if (line[ci] === '\\') { esc = true; continue; }
+                                if (line[ci] === "'") { valueEndInLine = ci; break; }
+                            }
+
+                            // Build the new line
+                            var escaped = escapeForJS(changedKeys[key]);
+                            var newLine = line.substring(0, valueStartInLine) + escaped + line.substring(valueEndInLine);
+
+                            if (newLine !== line) {
+                                appliedChanges.push(lang.toUpperCase() + ': ' + key);
+                            }
+
+                            lines[lineIdx] = newLine;
+
+                            // Remove from changedKeys so we don't process it again
+                            delete changedKeys[key];
+                            break; // move to next line
+                        }
                     }
 
-                    var oldValue = block.substring(start, end);
-                    if (oldValue === escaped) {
-                        console.log('[Admin Export] ' + langLabel + ' "' + key + '": value unchanged (identical to source)');
-                    } else {
-                        console.log('[Admin Export] ' + langLabel + ' "' + key + '": CHANGED');
-                        console.log('  Old:', oldValue.substring(0, 80) + (oldValue.length > 80 ? '...' : ''));
-                        console.log('  New:', escaped.substring(0, 80) + (escaped.length > 80 ? '...' : ''));
-                        appliedChanges.push(langLabel + ': ' + key);
+                    // Report any keys we didn't find
+                    var remaining = Object.keys(changedKeys);
+                    for (var r = 0; r < remaining.length; r++) {
+                        missingKeys.push(lang.toUpperCase() + ': ' + remaining[r]);
                     }
 
-                    return block.substring(0, start) + escaped + block.substring(end);
+                    return lines.join('\n');
                 }
 
-                // Apply each pending change to the correct section
-                var keys = Object.keys(pendingChanges);
-                for (var idx = 0; idx < keys.length; idx++) {
-                    var key = keys[idx];
-                    var change = pendingChanges[key];
-                    if (change.en !== undefined) {
-                        enBlock = replaceKeyInBlock(enBlock, key, change.en, 'EN');
-                    }
-                    if (change.tr !== undefined) {
-                        trBlock = replaceKeyInBlock(trBlock, key, change.tr, 'TR');
-                    }
-                }
+                var newEnBlock = rewriteBlock(sections.enBlock, 'en');
+                var newTrBlock = rewriteBlock(sections.trBlock, 'tr');
 
                 // Reassemble the full script
-                var updatedScript = sections.beforeEn + enBlock + sections.middle + trBlock + sections.closing + sections.afterAll;
+                var updatedScript = sections.beforeEn + newEnBlock + sections.middle + newTrBlock + sections.closing + sections.afterAll;
 
-                // Log whether file actually changed
-                if (updatedScript === scriptContent) {
-                    console.log('[Admin Export] Note: exported file is identical to source (changes already in file).');
-                } else {
-                    console.log('[Admin Export] Export complete. ' + appliedChanges.length + ' actual change(s) applied.');
-                }
-
-                // Always download the file
+                // Download the updated script.js
                 downloadFile('script.js', updatedScript);
 
                 // Clear pending changes after successful export
                 pendingChanges = {};
                 localStorage.removeItem(STORAGE_KEY);
+                window._adminPendingChanges = pendingChanges;
                 updateStatus();
 
                 // Remove changed highlights from elements
@@ -714,20 +742,17 @@
                 });
 
                 var msg = '✅ script.js exported and downloaded!\n\n';
-                if (appliedChanges.length > 0) {
-                    msg += appliedChanges.length + ' text change(s) applied:\n' + appliedChanges.join('\n') + '\n\n';
-                } else {
-                    msg += 'Your pending edits matched what was already in the file (possibly from a previous export).\nThe file has been downloaded — your pending changes have been cleared.\n\n';
-                }
-                msg += 'Next steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
+                msg += appliedChanges.length + ' text change(s) written into the file.\n\n';
                 if (missingKeys.length > 0) {
-                    msg += '\n\n⚠️ Warning: The following keys were not found:\n' + missingKeys.join('\n');
+                    msg += '⚠️ These keys were NOT found in script.js:\n' + missingKeys.join('\n') + '\n\n';
                 }
+                msg += 'A backup of your changes (pending-changes-backup.json) was also saved.\n\n';
+                msg += 'Next steps:\n1. Replace script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
                 alert(msg);
             })
             .catch(function (error) {
                 console.error('Error exporting:', error);
-                alert('Error exporting changes. Please try again.');
+                alert('Error exporting changes. Your changes were saved as pending-changes-backup.json.');
             });
     }
 
