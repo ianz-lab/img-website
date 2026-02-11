@@ -619,62 +619,55 @@
             alert('No changes to export!');
             return;
         }
+        // Backup is still in localStorage and accessible via window._dumpChanges()
+        fetch('script.js?t=' + Date.now())
+            .then(function (response) { return response.text(); })
+            .then(function (scriptContent) {
+                var result = scriptContent;
+                var appliedCount = 0;
+                var notFound = [];
 
-        // Save backup JSON first
-        var backupJson = JSON.stringify(pendingChanges, null, 2);
-        downloadFile('pending-changes-backup.json', backupJson);
+                for (var i = 0; i < changeKeys.length; i++) {
+                    var key = changeKeys[i];
+                    var change = pendingChanges[key];
 
-        // Small delay so Chrome doesn't block the second download
-        setTimeout(function () {
-            fetch('script.js?t=' + Date.now())
-                .then(function (response) { return response.text(); })
-                .then(function (scriptContent) {
-                    var result = scriptContent;
-                    var appliedCount = 0;
-                    var notFound = [];
-
-                    for (var i = 0; i < changeKeys.length; i++) {
-                        var key = changeKeys[i];
-                        var change = pendingChanges[key];
-
-                        // EN is the 1st occurrence, TR is the 2nd occurrence
-                        if (change.en !== undefined) {
-                            var r = replaceValueForKey(result, key, change.en, 1);
-                            if (r.found) { result = r.text; appliedCount++; }
-                            else { notFound.push('EN: ' + key); }
-                        }
-                        if (change.tr !== undefined) {
-                            var r2 = replaceValueForKey(result, key, change.tr, 2);
-                            if (r2.found) { result = r2.text; appliedCount++; }
-                            else { notFound.push('TR: ' + key); }
-                        }
+                    // EN is the 1st occurrence, TR is the 2nd occurrence
+                    if (change.en !== undefined) {
+                        var r = replaceValueForKey(result, key, change.en, 1);
+                        if (r.found) { result = r.text; appliedCount++; }
+                        else { notFound.push('EN: ' + key); }
                     }
-
-                    // Download the modified script.js
-                    downloadFile('script.js', result);
-
-                    // Clear pending changes
-                    pendingChanges = {};
-                    localStorage.removeItem(STORAGE_KEY);
-                    window._adminPendingChanges = pendingChanges;
-                    updateStatus();
-                    document.querySelectorAll('.admin-changed').forEach(function (el) {
-                        el.classList.remove('admin-changed');
-                    });
-
-                    var msg = '✅ script.js exported!\n\n';
-                    msg += appliedCount + ' replacement(s) made.\n\n';
-                    if (notFound.length > 0) {
-                        msg += '⚠️ Not found:\n' + notFound.join('\n') + '\n\n';
+                    if (change.tr !== undefined) {
+                        var r2 = replaceValueForKey(result, key, change.tr, 2);
+                        if (r2.found) { result = r2.text; appliedCount++; }
+                        else { notFound.push('TR: ' + key); }
                     }
-                    msg += 'Next: Replace script.js in your project folder, commit & push to GitHub.';
-                    alert(msg);
-                })
-                .catch(function (error) {
-                    console.error('Export error:', error);
-                    alert('Error exporting. Your backup was saved as pending-changes-backup.json.');
+                }
+
+                // Download the modified script.js
+                downloadFile('script.js', result);
+
+                // Clear pending changes
+                pendingChanges = {};
+                localStorage.removeItem(STORAGE_KEY);
+                window._adminPendingChanges = pendingChanges;
+                updateStatus();
+                document.querySelectorAll('.admin-changed').forEach(function (el) {
+                    el.classList.remove('admin-changed');
                 });
-        }, 500);
+
+                var msg = '✅ script.js exported!\n\n';
+                msg += appliedCount + ' replacement(s) made.\n\n';
+                if (notFound.length > 0) {
+                    msg += '⚠️ Not found:\n' + notFound.join('\n') + '\n\n';
+                }
+                msg += 'Next: Replace script.js in your project folder, commit & push to GitHub.';
+                alert(msg);
+            })
+            .catch(function (error) {
+                console.error('Export error:', error);
+                alert('Error exporting changes. Check console for details.');
+            });
     }
 
     /**
