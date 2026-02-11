@@ -354,8 +354,8 @@
 
                     // Override with pending changes if they exist
                     var savedChange = pendingChanges[key] || {};
-                    if (savedChange.en) enValue = savedChange.en;
-                    if (savedChange.tr) trValue = savedChange.tr;
+                    if (savedChange.en !== undefined) enValue = savedChange.en;
+                    if (savedChange.tr !== undefined) trValue = savedChange.tr;
 
                     // Now show the modal with both values
                     showEditModalUI(key, element, enValue, trValue);
@@ -365,16 +365,16 @@
                     var currentLang = document.documentElement.lang || 'en';
                     var currentText = element.textContent.replace(/\u270F\uFE0F/g, '').trim();
                     var savedChange = pendingChanges[key] || {};
-                    enValue = savedChange.en || (currentLang === 'en' ? currentText : '');
-                    trValue = savedChange.tr || (currentLang === 'tr' ? currentText : '');
+                    enValue = (savedChange.en !== undefined) ? savedChange.en : (currentLang === 'en' ? currentText : '');
+                    trValue = (savedChange.tr !== undefined) ? savedChange.tr : (currentLang === 'tr' ? currentText : '');
                     showEditModalUI(key, element, enValue, trValue);
                 });
         } else {
             var currentLang = document.documentElement.lang || 'en';
             var currentText = element.textContent.replace(/\u270F\uFE0F/g, '').trim();
             var savedChange = pendingChanges[key] || {};
-            enValue = savedChange.en || (currentLang === 'en' ? currentText : '');
-            trValue = savedChange.tr || (currentLang === 'tr' ? currentText : '');
+            enValue = (savedChange.en !== undefined) ? savedChange.en : (currentLang === 'en' ? currentText : '');
+            trValue = (savedChange.tr !== undefined) ? savedChange.tr : (currentLang === 'tr' ? currentText : '');
             showEditModalUI(key, element, enValue, trValue);
         }
     }
@@ -598,9 +598,14 @@
             return;
         }
 
+        // Log what we're about to export
+        console.log('[Admin Export] Pending changes to export:', JSON.stringify(pendingChanges, null, 2));
+
         fetch('script.js?t=' + Date.now())
             .then(function (response) { return response.text(); })
             .then(function (scriptContent) {
+                console.log('[Admin Export] Fetched script.js, length:', scriptContent.length);
+
                 // Use brace-counting parser instead of fragile regex
                 var sections = parseTranslationSections(scriptContent);
 
@@ -609,11 +614,14 @@
                     return;
                 }
 
+                console.log('[Admin Export] Parsed sections successfully. EN block length:', sections.enBlock.length, 'TR block length:', sections.trBlock.length);
+
                 var enBlock = sections.enBlock;
                 var trBlock = sections.trBlock;
 
                 // Replace a key's value within a specific section block
                 var missingKeys = [];
+                var appliedChanges = [];
                 function replaceKeyInBlock(block, key, newValue, langLabel) {
                     var escaped = escapeForJS(newValue);
                     var k = escapeRegex(key);
@@ -621,6 +629,7 @@
                     var m = block.match(keyRegex);
                     if (!m) {
                         missingKeys.push(langLabel + ': ' + key);
+                        console.warn('[Admin Export] Key NOT FOUND in ' + langLabel + ' block:', key);
                         return block;
                     }
 
@@ -633,6 +642,17 @@
                         if (block[i] === '\\') { esc = true; continue; }
                         if (block[i] === "'") { end = i; break; }
                     }
+
+                    var oldValue = block.substring(start, end);
+                    if (oldValue === escaped) {
+                        console.log('[Admin Export] ' + langLabel + ' "' + key + '": value unchanged (identical to source)');
+                    } else {
+                        console.log('[Admin Export] ' + langLabel + ' "' + key + '": CHANGED');
+                        console.log('  Old:', oldValue.substring(0, 80) + (oldValue.length > 80 ? '...' : ''));
+                        console.log('  New:', escaped.substring(0, 80) + (escaped.length > 80 ? '...' : ''));
+                        appliedChanges.push(langLabel + ': ' + key);
+                    }
+
                     return block.substring(0, start) + escaped + block.substring(end);
                 }
 
@@ -652,11 +672,21 @@
                 // Reassemble the full script
                 var updatedScript = sections.beforeEn + enBlock + sections.middle + trBlock + sections.closing + sections.afterAll;
 
+                // Verify the exported file is different from the source
+                if (updatedScript === scriptContent) {
+                    console.warn('[Admin Export] WARNING: Exported file is IDENTICAL to source! No actual changes were applied.');
+                    alert('⚠️ Warning: The exported file appears identical to the current script.js.\n\nThis means your edits may not have been saved, or the saved values are the same as what\'s already in the file.\n\nPlease check your pending changes and try again.');
+                    return;
+                }
+
+                console.log('[Admin Export] Export complete. ' + appliedChanges.length + ' actual change(s) applied.');
 
                 // Download
                 downloadFile('script.js', updatedScript);
 
-                var msg = 'script.js downloaded!\n\nNext steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
+                var msg = '✅ script.js downloaded with ' + appliedChanges.length + ' change(s)!\n\n';
+                msg += 'Changes applied:\n' + appliedChanges.join('\n') + '\n\n';
+                msg += 'Next steps:\n1. Replace the script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
                 if (missingKeys.length > 0) {
                     msg += '\n\n⚠️ Warning: The following keys were not found in the source file and their changes were NOT included:\n' + missingKeys.join('\n');
                 }
