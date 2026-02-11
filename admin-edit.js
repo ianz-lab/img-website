@@ -341,7 +341,7 @@
 
         const scriptEl = document.querySelector('script[src="script.js"]');
         if (scriptEl) {
-            fetch('script.js')
+            fetch('script.js?t=' + Date.now())
                 .then(response => response.text())
                 .then(scriptContent => {
                     // Use brace-counting parser instead of regex
@@ -598,7 +598,7 @@
             return;
         }
 
-        fetch('script.js')
+        fetch('script.js?t=' + Date.now())
             .then(function (response) { return response.text(); })
             .then(function (scriptContent) {
                 // Use brace-counting parser instead of fragile regex
@@ -641,10 +641,10 @@
                 for (var idx = 0; idx < keys.length; idx++) {
                     var key = keys[idx];
                     var change = pendingChanges[key];
-                    if (change.en) {
+                    if (change.en !== undefined) {
                         enBlock = replaceKeyInBlock(enBlock, key, change.en, 'EN');
                     }
-                    if (change.tr) {
+                    if (change.tr !== undefined) {
                         trBlock = replaceKeyInBlock(trBlock, key, change.tr, 'TR');
                     }
                 }
@@ -652,12 +652,6 @@
                 // Reassemble the full script
                 var updatedScript = sections.beforeEn + enBlock + sections.middle + trBlock + sections.closing + sections.afterAll;
 
-                // Ensure the initialization fix is always preserved in exported files
-                // Replace old Turkish-only init with always-apply init
-                updatedScript = updatedScript.replace(
-                    /\/\/\s*Initialize language on page load\s*\n\s*if\s*\(currentLang === 'tr'\)\s*\{\s*\n\s*applyTranslations\('tr'\);\s*\n\s*updateLangToggleUI\('tr'\);\s*\n\s*\}/,
-                    "// Initialize language on page load - always apply to pick up any text changes\n    applyTranslations(currentLang);\n    updateLangToggleUI(currentLang);"
-                );
 
                 // Download
                 downloadFile('script.js', updatedScript);
