@@ -23,6 +23,27 @@
     let pendingChanges = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
     let currentTranslations = null;
 
+    // Expose pending changes globally for console access and debugging
+    window._adminPendingChanges = pendingChanges;
+
+    // Re-persist to localStorage to ensure they're saved
+    if (Object.keys(pendingChanges).length > 0) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(pendingChanges));
+    }
+
+    // Helper: dump all pending changes to console in a copyable format
+    window._dumpChanges = function () {
+        var data = JSON.stringify(pendingChanges, null, 2);
+        console.log(data);
+        // Also try to copy to clipboard
+        try {
+            navigator.clipboard.writeText(data).then(function () {
+                console.log('✅ Copied to clipboard!');
+            });
+        } catch (e) { /* ignore */ }
+        return data;
+    };
+
     // Wait for DOM to be ready
     document.addEventListener('DOMContentLoaded', function () {
         // Get reference to the translations object from the main script
