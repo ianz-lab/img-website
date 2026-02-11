@@ -611,149 +611,130 @@
     }
 
     // ============================================================
-    // EXPORT FUNCTION — line-by-line block rewriting for reliability
+    // EXPORT FUNCTION — direct full-text replacement, no block parsing
     // ============================================================
     function exportChanges() {
-        if (Object.keys(pendingChanges).length === 0) {
+        var changeKeys = Object.keys(pendingChanges);
+        if (changeKeys.length === 0) {
             alert('No changes to export!');
             return;
         }
 
-        // First, download a backup of pending changes as JSON (safety net)
+        // Save backup JSON first
         var backupJson = JSON.stringify(pendingChanges, null, 2);
         downloadFile('pending-changes-backup.json', backupJson);
 
-        fetch('script.js?t=' + Date.now())
-            .then(function (response) { return response.text(); })
-            .then(function (scriptContent) {
-                // Use brace-counting parser to split the file into sections
-                var sections = parseTranslationSections(scriptContent);
+        // Small delay so Chrome doesn't block the second download
+        setTimeout(function () {
+            fetch('script.js?t=' + Date.now())
+                .then(function (response) { return response.text(); })
+                .then(function (scriptContent) {
+                    var result = scriptContent;
+                    var appliedCount = 0;
+                    var notFound = [];
 
-                if (!sections) {
-                    alert('Error: Could not parse translations structure in script.js.\n\nYour changes have been saved as pending-changes-backup.json.');
-                    return;
-                }
+                    for (var i = 0; i < changeKeys.length; i++) {
+                        var key = changeKeys[i];
+                        var change = pendingChanges[key];
 
-                // --- Line-by-line rewriting approach ---
-                // Split each language block into individual lines,
-                // find lines containing keys we have changes for,
-                // and rebuild those lines with the new values.
-
-                var appliedChanges = [];
-                var missingKeys = [];
-
-                function rewriteBlock(block, lang) {
-                    var lines = block.split('\n');
-                    var changedKeys = {};
-
-                    // Build a lookup of keys we need to change for this language
-                    var keys = Object.keys(pendingChanges);
-                    for (var i = 0; i < keys.length; i++) {
-                        var change = pendingChanges[keys[i]];
-                        if (change[lang] !== undefined) {
-                            changedKeys[keys[i]] = change[lang];
+                        // EN is the 1st occurrence, TR is the 2nd occurrence
+                        if (change.en !== undefined) {
+                            var r = replaceValueForKey(result, key, change.en, 1);
+                            if (r.found) { result = r.text; appliedCount++; }
+                            else { notFound.push('EN: ' + key); }
+                        }
+                        if (change.tr !== undefined) {
+                            var r2 = replaceValueForKey(result, key, change.tr, 2);
+                            if (r2.found) { result = r2.text; appliedCount++; }
+                            else { notFound.push('TR: ' + key); }
                         }
                     }
 
-                    // Process each line
-                    for (var lineIdx = 0; lineIdx < lines.length; lineIdx++) {
-                        var line = lines[lineIdx];
+                    // Download the modified script.js
+                    downloadFile('script.js', result);
 
-                        // Check each pending key against this line
-                        var pendingKeysList = Object.keys(changedKeys);
-                        for (var k = 0; k < pendingKeysList.length; k++) {
-                            var key = pendingKeysList[k];
+                    // Clear pending changes
+                    pendingChanges = {};
+                    localStorage.removeItem(STORAGE_KEY);
+                    window._adminPendingChanges = pendingChanges;
+                    updateStatus();
+                    document.querySelectorAll('.admin-changed').forEach(function (el) {
+                        el.classList.remove('admin-changed');
+                    });
 
-                            // Check if this line contains the key (quoted with single or double quotes)
-                            if (line.indexOf("'" + key + "'") === -1 && line.indexOf('"' + key + '"') === -1) {
-                                continue;
-                            }
-
-                            // Found the key on this line — rebuild the line
-                            // Find where the value starts (after the key and colon and opening quote)
-                            var keyPatternSingle = "'" + key + "'";
-                            var keyPatternDouble = '"' + key + '"';
-                            var keyPos = line.indexOf(keyPatternSingle);
-                            var keyLen = keyPatternSingle.length;
-                            if (keyPos === -1) {
-                                keyPos = line.indexOf(keyPatternDouble);
-                                keyLen = keyPatternDouble.length;
-                            }
-
-                            // Find the colon and opening quote after the key
-                            var afterKey = line.substring(keyPos + keyLen);
-                            var colonQuoteMatch = afterKey.match(/:\s*'/);
-                            if (!colonQuoteMatch) continue;
-
-                            var valueStartInLine = keyPos + keyLen + colonQuoteMatch.index + colonQuoteMatch[0].length;
-
-                            // Walk forward to find the closing quote (handling escapes)
-                            var valueEndInLine = valueStartInLine;
-                            var esc = false;
-                            for (var ci = valueStartInLine; ci < line.length; ci++) {
-                                if (esc) { esc = false; continue; }
-                                if (line[ci] === '\\') { esc = true; continue; }
-                                if (line[ci] === "'") { valueEndInLine = ci; break; }
-                            }
-
-                            // Build the new line
-                            var escaped = escapeForJS(changedKeys[key]);
-                            var newLine = line.substring(0, valueStartInLine) + escaped + line.substring(valueEndInLine);
-
-                            if (newLine !== line) {
-                                appliedChanges.push(lang.toUpperCase() + ': ' + key);
-                            }
-
-                            lines[lineIdx] = newLine;
-
-                            // Remove from changedKeys so we don't process it again
-                            delete changedKeys[key];
-                            break; // move to next line
-                        }
+                    var msg = '✅ script.js exported!\n\n';
+                    msg += appliedCount + ' replacement(s) made.\n\n';
+                    if (notFound.length > 0) {
+                        msg += '⚠️ Not found:\n' + notFound.join('\n') + '\n\n';
                     }
-
-                    // Report any keys we didn't find
-                    var remaining = Object.keys(changedKeys);
-                    for (var r = 0; r < remaining.length; r++) {
-                        missingKeys.push(lang.toUpperCase() + ': ' + remaining[r]);
-                    }
-
-                    return lines.join('\n');
-                }
-
-                var newEnBlock = rewriteBlock(sections.enBlock, 'en');
-                var newTrBlock = rewriteBlock(sections.trBlock, 'tr');
-
-                // Reassemble the full script
-                var updatedScript = sections.beforeEn + newEnBlock + sections.middle + newTrBlock + sections.closing + sections.afterAll;
-
-                // Download the updated script.js
-                downloadFile('script.js', updatedScript);
-
-                // Clear pending changes after successful export
-                pendingChanges = {};
-                localStorage.removeItem(STORAGE_KEY);
-                window._adminPendingChanges = pendingChanges;
-                updateStatus();
-
-                // Remove changed highlights from elements
-                document.querySelectorAll('.admin-changed').forEach(function (el) {
-                    el.classList.remove('admin-changed');
+                    msg += 'Next: Replace script.js in your project folder, commit & push to GitHub.';
+                    alert(msg);
+                })
+                .catch(function (error) {
+                    console.error('Export error:', error);
+                    alert('Error exporting. Your backup was saved as pending-changes-backup.json.');
                 });
+        }, 500);
+    }
 
-                var msg = '✅ script.js exported and downloaded!\n\n';
-                msg += appliedChanges.length + ' text change(s) written into the file.\n\n';
-                if (missingKeys.length > 0) {
-                    msg += '⚠️ These keys were NOT found in script.js:\n' + missingKeys.join('\n') + '\n\n';
-                }
-                msg += 'A backup of your changes (pending-changes-backup.json) was also saved.\n\n';
-                msg += 'Next steps:\n1. Replace script.js in your website folder\n2. Commit and push to GitHub\n3. Wait for Vercel to deploy (1-2 mins)';
-                alert(msg);
-            })
-            .catch(function (error) {
-                console.error('Error exporting:', error);
-                alert('Error exporting changes. Your changes were saved as pending-changes-backup.json.');
-            });
+    /**
+     * Find the key in the full text and replace its value.
+     * Handles BOTH occurrences (one in en: block, one in tr: block)
+     * by finding the NEXT occurrence after the previous replacement.
+     *
+     * Returns { found: boolean, text: string }
+     */
+    function replaceValueForKey(text, key, newValue, occurrence) {
+        var escaped = escapeForJS(newValue);
+        var searchSingle = "'" + key + "'";
+        var searchDouble = '"' + key + '"';
+
+        // Find the Nth occurrence of this key (1=first/EN, 2=second/TR)
+        var found = 0;
+        var searchFrom = 0;
+        var keyIdx = -1;
+        var usedLen = 0;
+
+        while (found < occurrence) {
+            keyIdx = text.indexOf(searchSingle, searchFrom);
+            usedLen = searchSingle.length;
+            if (keyIdx === -1) {
+                keyIdx = text.indexOf(searchDouble, searchFrom);
+                usedLen = searchDouble.length;
+            }
+            if (keyIdx === -1) {
+                return { found: false, text: text };
+            }
+            found++;
+            if (found < occurrence) {
+                searchFrom = keyIdx + usedLen;
+            }
+        }
+
+        // Find the colon and opening quote after the key
+        var afterKeyStart = keyIdx + usedLen;
+        var rest = text.substring(afterKeyStart);
+        var colonMatch = rest.match(/:\s*'/);
+        if (!colonMatch) {
+            return { found: false, text: text };
+        }
+
+        var valueStart = afterKeyStart + colonMatch.index + colonMatch[0].length;
+
+        // Walk to find the closing single quote (respecting escapes)
+        var valueEnd = valueStart;
+        var esc = false;
+        for (var i = valueStart; i < text.length; i++) {
+            if (esc) { esc = false; continue; }
+            if (text[i] === '\\') { esc = true; continue; }
+            if (text[i] === "'") { valueEnd = i; break; }
+        }
+
+        // Replace the value
+        return {
+            found: true,
+            text: text.substring(0, valueStart) + escaped + text.substring(valueEnd)
+        };
     }
 
     function downloadFile(filename, content) {
