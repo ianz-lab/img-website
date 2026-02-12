@@ -706,7 +706,51 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-full" data-i18n="contact.sendButton">Send
                             Message</button>
+                        <div id="formResult"
+                            style="margin-top: 1rem; padding: 1rem; border-radius: 8px; display: none;"></div>
                     </form>
+                    <script>
+                        const form = document.getElementById('contactForm');
+                        const resultDiv = document.getElementById('formResult');
+                        form.addEventListener('submit', function (e) {
+                            e.preventDefault();
+                            const submitBtn = form.querySelector('button[type="submit"]');
+                            submitBtn.disabled = true;
+                            submitBtn.textContent = 'Sending...';
+                            const formData = new FormData(form);
+                            const object = Object.fromEntries(formData);
+                            fetch('https://api.web3forms.com/submit', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                                body: JSON.stringify(object)
+                            })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        resultDiv.style.display = 'block';
+                                        resultDiv.style.background = 'rgba(39, 174, 96, 0.15)';
+                                        resultDiv.style.color = '#27ae60';
+                                        resultDiv.innerHTML = 'Message sent successfully! We will get back to you soon.';
+                                        form.reset();
+                                    } else {
+                                        resultDiv.style.display = 'block';
+                                        resultDiv.style.background = 'rgba(231, 76, 60, 0.15)';
+                                        resultDiv.style.color = '#e74c3c';
+                                        resultDiv.innerHTML = 'Error: ' + (data.message || 'Something went wrong.');
+                                    }
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = 'Send Message';
+                                })
+                                .catch(error => {
+                                    resultDiv.style.display = 'block';
+                                    resultDiv.style.background = 'rgba(231, 76, 60, 0.15)';
+                                    resultDiv.style.color = '#e74c3c';
+                                    resultDiv.innerHTML = 'Network error: ' + error.message;
+                                    submitBtn.disabled = false;
+                                    submitBtn.textContent = 'Send Message';
+                                });
+                        });
+                    </script>
                 </div>
             </div>
         </div>
