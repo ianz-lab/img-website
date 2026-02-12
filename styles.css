@@ -317,6 +317,10 @@ body {
     margin-bottom: 24px;
 }
 
+html[lang="tr"] .hero-title {
+    font-size: clamp(2.2rem, 6.5vw, 4.2rem);
+}
+
 .hero-subtitle {
     font-size: clamp(1rem, 2vw, 1.25rem);
     color: var(--color-text-secondary);
