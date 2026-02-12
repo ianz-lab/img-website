@@ -85,22 +85,206 @@
     <!-- Partner Content (shown after authentication) -->
     <section class="partner-content" id="partnerContent">
         <div class="container">
-            <div class="partner-placeholder">
-                <div class="partner-placeholder-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                        <path d="M2 17l10 5 10-5" />
-                        <path d="M2 12l10 5 10-5" />
-                    </svg>
+
+            <!-- Calculator Section -->
+            <div class="calc-section" id="calcSection">
+
+                <!-- Header -->
+                <div class="calc-header">
+                    <h2 class="calc-title">Investment Calculator</h2>
+                    <p class="calc-subtitle">Model your real estate investment returns with live projections.</p>
                 </div>
-                <h2>Welcome to the Partner Portal</h2>
-                <p>Content is being prepared for this section. Check back soon for:</p>
-                <ul>
-                    <li>Current Example Investments</li>
-                    <li>Presentation Slideshow</li>
-                    <li>Investment Calculator</li>
-                </ul>
-            </div>
+
+                <!-- Input Form -->
+                <div class="calc-inputs-wrapper">
+                    <div class="calc-inputs-header">
+                        <h3>Property Details</h3>
+                        <button class="calc-advanced-toggle" id="advancedToggle" type="button">
+                            <span class="toggle-label">Advanced</span>
+                            <span class="toggle-switch" id="toggleSwitch"></span>
+                        </button>
+                    </div>
+
+                    <div class="calc-inputs" id="calcInputs">
+                        <!-- Simple Mode Inputs (always visible) -->
+                        <div class="calc-input-group">
+                            <label for="purchasePrice">Purchase Price</label>
+                            <div class="calc-input-field">
+                                <span class="input-prefix">$</span>
+                                <input type="text" id="purchasePrice" value="1,650,000" inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="monthlyRent">Gross Monthly Rent</label>
+                            <div class="calc-input-field">
+                                <span class="input-prefix">$</span>
+                                <input type="text" id="monthlyRent" value="12,500" inputmode="numeric">
+                            </div>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="downPaymentPct">Down Payment</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="downPaymentPct" value="30" min="0" max="100" step="1">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="downPaymentSlider" min="0" max="100" value="30"
+                                step="1">
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="interestRate">Interest Rate</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="interestRate" value="7.00" min="0" max="20" step="0.25">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="interestSlider" min="0" max="20" value="7"
+                                step="0.25">
+                        </div>
+
+                        <!-- Advanced Mode Inputs (hidden by default) -->
+                        <div class="calc-input-group advanced-input">
+                            <label for="opexPct">Operating Expenses</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="opexPct" value="35" min="0" max="80" step="1">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="opexSlider" min="0" max="80" value="35"
+                                step="1">
+                        </div>
+
+                        <div class="calc-input-group advanced-input">
+                            <label for="appreciationRate">Appreciation Rate</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="appreciationRate" value="3" min="0" max="15" step="0.5">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="appreciationSlider" min="0" max="15" value="3"
+                                step="0.5">
+                        </div>
+
+                        <div class="calc-input-group advanced-input">
+                            <label for="rentGrowth">Rent Growth Rate</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="rentGrowth" value="2" min="0" max="10" step="0.5">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="rentGrowthSlider" min="0" max="10" value="2"
+                                step="0.5">
+                        </div>
+
+                        <div class="calc-input-group advanced-input">
+                            <label for="loanTerm">Loan Term</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="loanTerm" value="30" min="1" max="40" step="1">
+                                <span class="input-suffix">yrs</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="loanTermSlider" min="1" max="40" value="30"
+                                step="1">
+                        </div>
+
+                        <div class="calc-input-group advanced-input">
+                            <label for="sellingCost">Selling Costs</label>
+                            <div class="calc-input-field">
+                                <input type="number" id="sellingCost" value="7" min="0" max="15" step="0.5">
+                                <span class="input-suffix">%</span>
+                            </div>
+                            <input type="range" class="calc-slider" id="sellingCostSlider" min="0" max="15" value="7"
+                                step="0.5">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Highlight Metric Cards -->
+                <div class="calc-highlights" id="calcHighlights">
+                    <div class="calc-stat-card">
+                        <div class="calc-stat-label">Cap Rate
+                            <span class="calc-tooltip-icon"
+                                data-tooltip="Net Operating Income divided by Purchase Price. Measures property's return independent of financing.">?</span>
+                        </div>
+                        <div class="calc-stat-value" id="hlCapRate">—</div>
+                    </div>
+                    <div class="calc-stat-card">
+                        <div class="calc-stat-label">Cash-on-Cash Return
+                            <span class="calc-tooltip-icon"
+                                data-tooltip="Annual cash flow divided by total cash invested. Shows actual yield on your out-of-pocket investment.">?</span>
+                        </div>
+                        <div class="calc-stat-value" id="hlCashOnCash">—</div>
+                    </div>
+                    <div class="calc-stat-card">
+                        <div class="calc-stat-label">IRR (10yr)
+                            <span class="calc-tooltip-icon"
+                                data-tooltip="Internal Rate of Return over 10 years. The annualized rate that accounts for the time value of money.">?</span>
+                        </div>
+                        <div class="calc-stat-value" id="hlIRR">—</div>
+                    </div>
+                    <div class="calc-stat-card">
+                        <div class="calc-stat-label">Annual NOI
+                            <span class="calc-tooltip-icon"
+                                data-tooltip="Net Operating Income — annual rental income minus operating expenses, before debt service.">?</span>
+                        </div>
+                        <div class="calc-stat-value" id="hlNOI">—</div>
+                    </div>
+                    <div class="calc-stat-card">
+                        <div class="calc-stat-label">DSCR
+                            <span class="calc-tooltip-icon"
+                                data-tooltip="Debt Service Coverage Ratio — NOI divided by annual debt payments. Above 1.0 means income covers the mortgage.">?</span>
+                        </div>
+                        <div class="calc-stat-value" id="hlDSCR">—</div>
+                    </div>
+                    <div class="calc-stat-card">
+                        <div class="calc-stat-label">Equity Multiple (10yr)
+                            <span class="calc-tooltip-icon"
+                                data-tooltip="Total return (cash flow + net sale proceeds) divided by initial cash invested over the hold period.">?</span>
+                        </div>
+                        <div class="calc-stat-value" id="hlEquityMultiple">—</div>
+                    </div>
+                </div>
+
+                <!-- Chart -->
+                <div class="calc-chart-wrapper">
+                    <h3 class="calc-chart-title">30-Year Projection</h3>
+                    <div class="calc-chart-container">
+                        <canvas id="projectionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Data Table Toggle -->
+                <div class="calc-table-section">
+                    <button class="calc-table-toggle" id="tableToggle" type="button">
+                        <span id="tableToggleText">Show Data Table</span>
+                        <svg class="toggle-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </button>
+                    <div class="calc-table-container" id="tableContainer">
+                        <div class="calc-table-scroll">
+                            <table class="calc-table" id="projectionTable">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Property Value</th>
+                                        <th>Annual Cash Flow</th>
+                                        <th>Cumulative Cash Flow</th>
+                                        <th>Total Equity</th>
+                                        <th>Net Sale Proceeds</th>
+                                        <th>Total Profit</th>
+                                        <th>Cash Yield</th>
+                                        <th>Leveraged ROI</th>
+                                        <th>IRR</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projectionTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- /.calc-section -->
+
         </div>
     </section>
 
@@ -135,6 +319,7 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
     <script src="partner.js"></script>
 </body>
 

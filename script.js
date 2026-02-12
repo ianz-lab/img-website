@@ -519,7 +519,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
-            if (t[key]) {
+            if (key in t) {
                 if (key.includes('Item')) {
                     el.innerHTML = t[key]; // Allow HTML for list items with <strong>
                 } else {
