@@ -127,9 +127,21 @@
     // Partner Password Management Modal
     // ============================================================
     function showPartnerPasswordModal() {
-        var PARTNER_PW_KEY = 'imglobal-partner-password';
-        var currentPw = localStorage.getItem(PARTNER_PW_KEY) || 'globalinc';
+        // Fetch partner.js to read the current hardcoded password
+        fetch('partner.js?t=' + Date.now())
+            .then(function (r) { return r.text(); })
+            .then(function (partnerSource) {
+                // Parse the current password from:  var PARTNER_PASSWORD = 'xxx';
+                var pwMatch = partnerSource.match(/PARTNER_PASSWORD\s*=\s*'([^']*)'/);
+                var currentPw = pwMatch ? pwMatch[1] : '(unknown)';
+                showPartnerPwUI(currentPw, partnerSource);
+            })
+            .catch(function () {
+                showPartnerPwUI('globalinc', null);
+            });
+    }
 
+    function showPartnerPwUI(currentPw, partnerSource) {
         var overlay = document.createElement('div');
         overlay.className = 'admin-modal-overlay';
         overlay.innerHTML = `
@@ -147,17 +159,17 @@
                         <label style="display: block; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem;">New Password</label>
                         <input type="text" id="partnerPwNew" style="width: 100%; padding: 0.7rem 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; box-sizing: border-box;" placeholder="Enter new password...">
                     </div>
+                    <p style="margin-top: 1rem; font-size: 0.8rem; color: rgba(255,255,255,0.4); line-height: 1.4;">Saving will download an updated <strong>partner.js</strong>. Replace the file in your project folder, then commit &amp; push to deploy.</p>
                 </div>
                 <div class="admin-modal-footer">
                     <button class="admin-modal-btn admin-modal-btn-cancel">Cancel</button>
-                    <button class="admin-modal-btn admin-modal-btn-save" id="partnerPwSave">Save Password</button>
+                    <button class="admin-modal-btn admin-modal-btn-save" id="partnerPwSave">Save & Export</button>
                 </div>
             </div>
         `;
 
         document.body.appendChild(overlay);
 
-        // Set current password display via DOM (not template string)
         overlay.querySelector('#partnerPwCurrent').textContent = currentPw;
 
         function closeModal() {
@@ -182,12 +194,21 @@
                 alert('Please enter a new password.');
                 return;
             }
-            localStorage.setItem(PARTNER_PW_KEY, newPw);
-            alert('\u2705 Partner password updated to: ' + newPw);
+            if (!partnerSource) {
+                alert('Could not load partner.js. Please change the password directly in the file.');
+                return;
+            }
+            // Replace the password in the source
+            var updatedSource = partnerSource.replace(
+                /PARTNER_PASSWORD\s*=\s*'[^']*'/,
+                "PARTNER_PASSWORD = '" + newPw.replace(/\\/g, '\\\\').replace(/'/g, "\\'") + "'"
+            );
+            // Download the updated file
+            downloadFile('partner.js', updatedSource);
+            alert('\u2705 partner.js exported with new password: ' + newPw + '\n\nReplace partner.js in your project folder, then commit & push to deploy.');
             closeModal();
         });
 
-        // Focus the new password input
         setTimeout(function () {
             overlay.querySelector('#partnerPwNew').focus();
         }, 100);

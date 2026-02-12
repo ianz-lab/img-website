@@ -5,26 +5,23 @@
 (function () {
     'use strict';
 
-    const DEFAULT_PASSWORD = 'globalinc';
-    const STORAGE_KEY = 'imglobal-partner-password';
-    const SESSION_KEY = 'imglobal-partner-authed';
+    // ── Password is set here ──────────────────────────────
+    // Change this value to update the partner portal password.
+    // It can also be changed from the admin edit page which
+    // will export an updated partner.js file.
+    var PARTNER_PASSWORD = 'globalinc';
+    // ──────────────────────────────────────────────────────
 
-    const gate = document.getElementById('partnerGate');
-    const content = document.getElementById('partnerContent');
-    const passwordInput = document.getElementById('partnerPassword');
-    const submitBtn = document.getElementById('partnerSubmit');
-    const errorMsg = document.getElementById('partnerError');
+    var gate = document.getElementById('partnerGate');
+    var content = document.getElementById('partnerContent');
+    var passwordInput = document.getElementById('partnerPassword');
+    var submitBtn = document.getElementById('partnerSubmit');
+    var errorMsg = document.getElementById('partnerError');
 
-    function getPassword() {
-        return localStorage.getItem(STORAGE_KEY) || DEFAULT_PASSWORD;
-    }
-
-    function isAuthenticated() {
-        return sessionStorage.getItem(SESSION_KEY) === 'true';
-    }
+    // If elements aren't on this page, exit early
+    if (!gate || !passwordInput) return;
 
     function grantAccess() {
-        sessionStorage.setItem(SESSION_KEY, 'true');
         gate.classList.add('hidden');
         content.classList.add('visible');
         // Remove gate from DOM after fade-out transition
@@ -48,36 +45,31 @@
         var entered = passwordInput.value.trim();
         if (!entered) return;
 
-        if (entered === getPassword()) {
+        if (entered === PARTNER_PASSWORD) {
             grantAccess();
         } else {
             showError();
         }
     }
 
-    // Check if already authenticated this session
-    if (isAuthenticated()) {
-        grantAccess();
-    } else {
-        // Focus password input on page load
-        setTimeout(function () {
-            passwordInput.focus();
-        }, 700); // After the gate slide-in animation
+    // Focus password input on page load
+    setTimeout(function () {
+        passwordInput.focus();
+    }, 700);
 
-        // Submit on button click
-        submitBtn.addEventListener('click', attemptLogin);
+    // Submit on button click
+    submitBtn.addEventListener('click', attemptLogin);
 
-        // Submit on Enter key
-        passwordInput.addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                attemptLogin();
-            }
-        });
+    // Submit on Enter key
+    passwordInput.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            attemptLogin();
+        }
+    });
 
-        // Clear error on typing
-        passwordInput.addEventListener('input', function () {
-            errorMsg.classList.remove('visible');
-        });
-    }
+    // Clear error on typing
+    passwordInput.addEventListener('input', function () {
+        errorMsg.classList.remove('visible');
+    });
 })();
