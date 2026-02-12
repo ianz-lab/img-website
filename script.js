@@ -133,39 +133,10 @@ document.addEventListener('DOMContentLoaded', function () {
     setTimeout(revealOnScroll, 100); // Initial check after slight delay
 
     // ===================================
-    // Contact Form Handling
-    // ===================================
+    // Contact form handling is done via Web3Forms in index.html
 
-    const contactForm = document.getElementById('contactForm');
 
-    contactForm.addEventListener('submit', function (e) {
-        e.preventDefault();
 
-        // Get form data
-        const formData = new FormData(contactForm);
-        const data = Object.fromEntries(formData);
-
-        // Show success message (in production, you'd send this to a server)
-        const button = contactForm.querySelector('button[type="submit"]');
-        const originalText = button.textContent;
-
-        button.textContent = 'Message Sent!';
-        button.style.background = '#22c55e';
-        button.disabled = true;
-
-        // Reset form
-        contactForm.reset();
-
-        // Reset button after 3 seconds
-        setTimeout(() => {
-            button.textContent = originalText;
-            button.style.background = '';
-            button.disabled = false;
-        }, 3000);
-
-        // Log for testing (remove in production)
-        console.log('Form submitted:', data);
-    });
 
     // ===================================
     // Parallax Effect for Hero
