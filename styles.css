@@ -321,6 +321,14 @@ html[lang="tr"] .hero-title {
     font-size: clamp(2.2rem, 6.5vw, 4.2rem);
 }
 
+.hero-title-line1b:empty {
+    display: none;
+}
+
+.hero-title-line1b:not(:empty) {
+    display: block;
+}
+
 .hero-subtitle {
     font-size: clamp(1rem, 2vw, 1.25rem);
     color: var(--color-text-secondary);

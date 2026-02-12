@@ -259,6 +259,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // Hero
             'hero.badge': 'California Real Estate Investment',
             'hero.titleLine1': 'Your Bridge to',
+            'hero.titleLine1b': '',
             'hero.titleLine2': 'U.S. Real Estate',
             'hero.subtitle': 'More than providing opportunities, we guide international investors through every stage of planning, execution, and growth in the United States.\n',
             'hero.cta1': 'Start Your Journey',
@@ -389,7 +390,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Hero
             'hero.badge': 'Kaliforniya Gayrimenkul Yatırımı',
-            'hero.titleLine1': 'Amerika\'da Gayrimenkul Yatırımına',
+            'hero.titleLine1': 'Amerika\'da',
+            'hero.titleLine1b': 'Gayrimenkul Yatırımına',
             'hero.titleLine2': 'Açılan Stratejik Yolunuz',
             'hero.subtitle': 'Uluslararası yatırımcılara yalnızca fırsatlar sunmakla kalmıyor; ABD’deki yatırımlarının planlama, uygulama ve büyüme aşamalarının tamamında rehberlik ediyoruz.',
             'hero.cta1': 'Yolculuğunuza Başlayın',
