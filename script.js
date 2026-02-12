@@ -226,8 +226,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Update button text based on current language
             const currentLang = document.documentElement.lang || 'en';
+            const customKey = btnText.getAttribute('data-i18n');
             if (targetContent.classList.contains('active')) {
                 btnText.textContent = currentLang === 'tr' ? 'Daha Az Göster' : 'Show Less';
+            } else if (customKey) {
+                // Restore custom label from translations
+                const t = window._translations && window._translations[currentLang];
+                btnText.textContent = (t && t[customKey]) || btnText.textContent;
             } else {
                 btnText.textContent = currentLang === 'tr' ? 'Devamını Oku' : 'Read More';
             }
@@ -506,6 +511,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'common.showLess': 'Daha Az Göster'
         }
     };
+    window._translations = translations;
 
     let currentLang = localStorage.getItem('imglobal-lang') || 'en';
 
@@ -559,8 +565,12 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.expand-btn').forEach(btn => {
             const content = document.getElementById(btn.getAttribute('data-target'));
             const btnText = btn.querySelector('span');
+            const customKey = btnText.getAttribute('data-i18n');
             if (content && content.classList.contains('active')) {
                 btnText.textContent = t['common.showLess'];
+            } else if (customKey && t[customKey]) {
+                // Use custom translation key instead of generic Read More
+                btnText.textContent = t[customKey];
             } else {
                 btnText.textContent = t['common.readMore'];
             }
