@@ -99,6 +99,7 @@
                     <span class="admin-toolbar-status" id="adminStatus">No pending changes</span>
                 </div>
                 <div class="admin-toolbar-right">
+                    <button class="admin-btn admin-btn-partner" id="adminPartnerPw">&#128273; Partner Password</button>
                     <button class="admin-btn admin-btn-instructions" id="adminInstructions">&#128214; How to Deploy</button>
                     <button class="admin-btn admin-btn-export" id="adminExport" disabled>&#128229; Export Changes</button>
                     <button class="admin-btn admin-btn-exit" id="adminExit">&#10005; Exit Edit Mode</button>
@@ -108,6 +109,7 @@
         document.body.insertBefore(toolbar, document.body.firstChild);
 
         // Event listeners
+        document.getElementById('adminPartnerPw').addEventListener('click', showPartnerPasswordModal);
         document.getElementById('adminInstructions').addEventListener('click', showInstructions);
         document.getElementById('adminExport').addEventListener('click', exportChanges);
         document.getElementById('adminExit').addEventListener('click', exitEditMode);
@@ -119,6 +121,76 @@
             this.title = toolbar.classList.contains('collapsed') ? 'Expand toolbar' : 'Collapse toolbar';
             document.body.classList.toggle('admin-mode-collapsed', toolbar.classList.contains('collapsed'));
         });
+    }
+
+    // ============================================================
+    // Partner Password Management Modal
+    // ============================================================
+    function showPartnerPasswordModal() {
+        var PARTNER_PW_KEY = 'imglobal-partner-password';
+        var currentPw = localStorage.getItem(PARTNER_PW_KEY) || 'globalinc';
+
+        var overlay = document.createElement('div');
+        overlay.className = 'admin-modal-overlay';
+        overlay.innerHTML = `
+            <div class="admin-modal" style="max-width: 440px;">
+                <div class="admin-modal-header">
+                    <div class="admin-modal-title">&#128273; Partner Portal Password</div>
+                    <button class="admin-modal-close">&times;</button>
+                </div>
+                <div class="admin-modal-body" style="padding: 1.5rem;">
+                    <div style="margin-bottom: 1.25rem;">
+                        <label style="display: block; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem;">Current Password</label>
+                        <div style="padding: 0.7rem 1rem; background: rgba(255,255,255,0.06); border: 1px solid rgba(212,175,55,0.2); border-radius: 8px; color: #d4af37; font-family: monospace; font-size: 1rem; letter-spacing: 0.05em;" id="partnerPwCurrent"></div>
+                    </div>
+                    <div>
+                        <label style="display: block; font-size: 0.85rem; color: rgba(255,255,255,0.6); margin-bottom: 0.5rem;">New Password</label>
+                        <input type="text" id="partnerPwNew" style="width: 100%; padding: 0.7rem 1rem; background: rgba(255,255,255,0.08); border: 1px solid rgba(212,175,55,0.3); border-radius: 8px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; box-sizing: border-box;" placeholder="Enter new password...">
+                    </div>
+                </div>
+                <div class="admin-modal-footer">
+                    <button class="admin-modal-btn admin-modal-btn-cancel">Cancel</button>
+                    <button class="admin-modal-btn admin-modal-btn-save" id="partnerPwSave">Save Password</button>
+                </div>
+            </div>
+        `;
+
+        document.body.appendChild(overlay);
+
+        // Set current password display via DOM (not template string)
+        overlay.querySelector('#partnerPwCurrent').textContent = currentPw;
+
+        function closeModal() {
+            overlay.remove();
+            document.removeEventListener('keydown', escHandler);
+        }
+
+        function escHandler(e) {
+            if (e.key === 'Escape') closeModal();
+        }
+
+        overlay.querySelector('.admin-modal-close').addEventListener('click', closeModal);
+        overlay.querySelector('.admin-modal-btn-cancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) closeModal();
+        });
+        document.addEventListener('keydown', escHandler);
+
+        overlay.querySelector('#partnerPwSave').addEventListener('click', function () {
+            var newPw = overlay.querySelector('#partnerPwNew').value.trim();
+            if (!newPw) {
+                alert('Please enter a new password.');
+                return;
+            }
+            localStorage.setItem(PARTNER_PW_KEY, newPw);
+            alert('\u2705 Partner password updated to: ' + newPw);
+            closeModal();
+        });
+
+        // Focus the new password input
+        setTimeout(function () {
+            overlay.querySelector('#partnerPwNew').focus();
+        }, 100);
     }
 
     // ============================================================

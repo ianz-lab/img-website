@@ -226,6 +226,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'nav.process': 'Process',
             'nav.team': 'Our Team',
             'nav.getStarted': 'Get Started',
+            'nav.partnerLogin': 'Partner Login',
 
             // Hero
             'hero.badge': 'California Real Estate Investment',
@@ -358,6 +359,7 @@ document.addEventListener('DOMContentLoaded', function () {
             'nav.process': 'Süreç',
             'nav.team': 'Ekibimiz',
             'nav.getStarted': 'Haydi Başlayalım',
+            'nav.partnerLogin': 'Partner Girişi',
 
             // Hero
             'hero.badge': 'Kaliforniya Gayrimenkul Yatırımı',

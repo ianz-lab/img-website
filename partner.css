@@ -1,0 +1,279 @@
+/* ===================================
+   Partner Portal — Password Gate & Content
+   =================================== */
+
+/* Password Gate Overlay */
+.partner-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    opacity: 1;
+    transition: opacity 0.5s ease;
+}
+
+.partner-gate.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.partner-gate-card {
+    background: linear-gradient(145deg, rgba(30, 30, 40, 0.95), rgba(20, 20, 28, 0.98));
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(212, 175, 55, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    animation: gateSlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes gateSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.partner-gate-icon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    color: #d4af37;
+}
+
+.partner-gate-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.partner-gate-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #d4af37, #f0d060, #c9a962);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.partner-gate-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.partner-gate-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.partner-gate-input {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+}
+
+.partner-gate-input::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+}
+
+.partner-gate-input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+}
+
+.partner-gate-input.shake {
+    animation: inputShake 0.5s ease;
+    border-color: #e74c3c;
+}
+
+@keyframes inputShake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    15% {
+        transform: translateX(-8px);
+    }
+
+    30% {
+        transform: translateX(8px);
+    }
+
+    45% {
+        transform: translateX(-6px);
+    }
+
+    60% {
+        transform: translateX(6px);
+    }
+
+    75% {
+        transform: translateX(-3px);
+    }
+
+    90% {
+        transform: translateX(3px);
+    }
+}
+
+.partner-gate-error {
+    color: #e74c3c;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    height: 0;
+    overflow: hidden;
+}
+
+.partner-gate-error.visible {
+    opacity: 1;
+    transform: translateY(0);
+    height: auto;
+    margin-top: -0.25rem;
+}
+
+.partner-gate-btn {
+    width: 100%;
+    padding: 0.9rem;
+    background: linear-gradient(135deg, #d4af37, #b8963c);
+    border: none;
+    border-radius: 12px;
+    color: #0a0a0f;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    letter-spacing: 0.02em;
+}
+
+.partner-gate-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
+}
+
+.partner-gate-btn:active {
+    transform: translateY(0);
+}
+
+/* Partner Content Area */
+.partner-content {
+    display: none;
+    min-height: calc(100vh - 160px);
+    padding-top: 120px;
+    padding-bottom: 4rem;
+}
+
+.partner-content.visible {
+    display: block;
+}
+
+.partner-placeholder {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.partner-placeholder-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 2rem;
+    color: rgba(212, 175, 55, 0.5);
+}
+
+.partner-placeholder-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.partner-placeholder h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #d4af37, #f0d060, #c9a962);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.partner-placeholder p {
+    font-family: 'Inter', sans-serif;
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.partner-placeholder ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.partner-placeholder ul li {
+    font-family: 'Inter', sans-serif;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.95rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(212, 175, 55, 0.06);
+    border: 1px solid rgba(212, 175, 55, 0.15);
+    border-radius: 10px;
+    transition: border-color 0.3s ease;
+}
+
+.partner-placeholder ul li:hover {
+    border-color: rgba(212, 175, 55, 0.35);
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .partner-gate-card {
+        padding: 2rem 1.5rem;
+        margin: 1rem;
+    }
+
+    .partner-gate-title {
+        font-size: 1.4rem;
+    }
+
+    .partner-placeholder h2 {
+        font-size: 1.5rem;
+    }
+}

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IM Global - Partner Portal for Referring Agents">
+    <title>IM Global | Partner Portal</title>
+    <link rel="icon" type="image/png" href="Site Media/IM GLOBAL INC. Logo.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="partner.css">
+</head>
+
+<body>
+    <!-- SVG Gradient Definition for Goldfoil Icons -->
+    <svg width="0" height="0" style="position: absolute; visibility: hidden;">
+        <defs>
+            <linearGradient id="goldfoil-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#d4af37" />
+                <stop offset="25%" style="stop-color:#f0d060" />
+                <stop offset="50%" style="stop-color:#c9a962" />
+                <stop offset="75%" style="stop-color:#e6c875" />
+                <stop offset="100%" style="stop-color:#b8963c" />
+            </linearGradient>
+            <pattern id="goldfoil-pattern" patternUnits="userSpaceOnUse" width="100" height="100">
+                <image href="Site Media/goldfoil.jpg" x="0" y="0" width="100" height="100" />
+            </pattern>
+        </defs>
+    </svg>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="nav-logo">
+                <img src="Site Media/IM GLOBAL INC. Logo.png" alt="IM Global" class="logo-img">
+            </a>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="index.html#why-us" class="nav-link" data-i18n="nav.whyUs">Why Us</a></li>
+                <li><a href="index.html#investments" class="nav-link" data-i18n="nav.investments">Investments</a></li>
+                <li><a href="index.html#process" class="nav-link" data-i18n="nav.process">Process</a></li>
+                <li><a href="index.html#team" class="nav-link" data-i18n="nav.team">Our Team</a></li>
+                <li><a href="index.html#contact" class="nav-link nav-cta" data-i18n="nav.getStarted">Get Started</a>
+                </li>
+                <li class="lang-toggle-wrapper">
+                    <button class="lang-toggle" id="langToggle" aria-label="Toggle language">
+                        <span class="lang-option active" data-lang="en">EN</span>
+                        <span class="lang-divider">|</span>
+                        <span class="lang-option" data-lang="tr">TR</span>
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Password Gate Overlay -->
+    <div class="partner-gate" id="partnerGate">
+        <div class="partner-gate-card">
+            <div class="partner-gate-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+            </div>
+            <h2 class="partner-gate-title">Partner Portal</h2>
+            <p class="partner-gate-subtitle">This area is for authorized referring agents only.</p>
+            <div class="partner-gate-form">
+                <input type="password" id="partnerPassword" class="partner-gate-input" placeholder="Enter password"
+                    autocomplete="off">
+                <div class="partner-gate-error" id="partnerError">Incorrect password. Please try again.</div>
+                <button class="partner-gate-btn" id="partnerSubmit">Access Portal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partner Content (shown after authentication) -->
+    <section class="partner-content" id="partnerContent">
+        <div class="container">
+            <div class="partner-placeholder">
+                <div class="partner-placeholder-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                        <path d="M2 17l10 5 10-5" />
+                        <path d="M2 12l10 5 10-5" />
+                    </svg>
+                </div>
+                <h2>Welcome to the Partner Portal</h2>
+                <p>Content is being prepared for this section. Check back soon for:</p>
+                <ul>
+                    <li>Current Example Investments</li>
+                    <li>Presentation Slideshow</li>
+                    <li>Investment Calculator</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="index.html" class="nav-logo">
+                        <img src="Site Media/IM GLOBAL INC. Logo.png" alt="IM Global" class="logo-img footer-logo">
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html#why-us" data-i18n="nav.whyUs">Why Us</a>
+                    <a href="index.html#investments" data-i18n="nav.investments">Investments</a>
+                    <a href="index.html#process" data-i18n="nav.process">Process</a>
+                    <a href="index.html#team" data-i18n="nav.team">Our Team</a>
+                    <a href="index.html#contact" data-i18n="contact.titleHighlight">Contact</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 IM Global Inc. All rights reserved.</p>
+                <p class="disclaimer" data-i18n="footer.disclaimer">All information provided on this website is deemed
+                    reliable but not guaranteed. It
+                    is intended for informational purposes only and should not be construed as legal, financial, or real
+                    estate advice. Users are encouraged to conduct their own due diligence and consult appropriate
+                    professionals before making any real estate decisions. Property listings and information are subject
+                    to change without notice. This website does not constitute a solicitation if your property is
+                    already listed with another real estate broker.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="partner.js"></script>
+</body>
+
+</html>
