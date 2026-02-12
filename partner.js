@@ -28,10 +28,6 @@
         setTimeout(function () {
             gate.style.display = 'none';
         }, 600);
-        // Initialize calculator after access is granted
-        setTimeout(function () {
-            if (typeof initCalculator === 'function') initCalculator();
-        }, 100);
     }
 
     function showError() {
@@ -76,6 +72,49 @@
     passwordInput.addEventListener('input', function () {
         errorMsg.classList.remove('visible');
     });
+})();
+
+
+// ===================================
+// Portal Screen Navigation
+// ===================================
+
+(function () {
+    'use strict';
+
+    var landing = document.getElementById('portalLanding');
+    var calcScreen = document.getElementById('portalCalcScreen');
+    var openCalcBtn = document.getElementById('openCalculator');
+    var backBtn = document.getElementById('backToPortal');
+    var calcInitialized = false;
+
+    if (!landing || !calcScreen) return;
+
+    function showCalculator() {
+        landing.style.display = 'none';
+        calcScreen.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Initialize calculator on first open
+        if (!calcInitialized && typeof initCalculator === 'function') {
+            initCalculator();
+            calcInitialized = true;
+        }
+    }
+
+    function showLanding() {
+        calcScreen.style.display = 'none';
+        landing.style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    if (openCalcBtn) {
+        openCalcBtn.addEventListener('click', showCalculator);
+    }
+
+    if (backBtn) {
+        backBtn.addEventListener('click', showLanding);
+    }
 })();
 
 
